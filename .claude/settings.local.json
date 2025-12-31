@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(npm install)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout 10 cat:*)",
+      "Bash(cat:*)",
+      "Bash(move /y srcapppage.tsx srcapppage-old.tsx)",
+      "Bash(move /y srcapppage-new.tsx srcapppage.tsx)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm install:*)",
+      "Bash(taskkill:*)",
+      "Bash(move /y \"src\\\\config\\\\pricing.ts\" \"src\\\\config\\\\pricing-old-backup.ts\")",
+      "Bash(move /y \"src\\\\config\\\\pricing-new.ts\" \"src\\\\config\\\\pricing.ts\")",
+      "Bash(curl:*)",
+      "Bash(grep:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd complete CoachCRM SaaS application with RBAC and payment integration\n\nThis commit includes the full implementation of a professional multi-tenant Coaching CRM system with the following features:\n\n## Core Features:\n- ✅ Role-Based Access Control \\(RBAC\\) with 5 roles \\(Owner, Admin, Manager, Coach, Support\\)\n- ✅ Plan-based feature restrictions \\(Standard, Pro, Premium\\)\n- ✅ Razorpay payment integration with subscription management\n- ✅ 7-day trial period with auto-charging\n- ✅ Usage tracking and limit warnings\n- ✅ WhatsApp integration support\n- ✅ AI-powered features \\(churn prediction, client insights\\)\n- ✅ Advanced analytics and reporting\n- ✅ Team management and invitations\n- ✅ Client management with real-time updates\n- ✅ Session scheduling and tracking\n- ✅ Payment processing and invoicing\n- ✅ Responsive dashboard with sidebar navigation\n\n## Technical Stack:\n- Next.js 14.1.0 with App Router\n- TypeScript\n- Supabase \\(PostgreSQL with RLS\\)\n- Razorpay for payments\n- TailwindCSS for styling\n- React components with hooks\n- Server-side API routes\n- Webhook handlers for payment automation\n\n## New Additions in This Commit:\n- Role selection during signup\n- Feature restriction middleware\n- Usage stats component on dashboard\n- Plan-based feature gating for analytics, clients, and team members\n- Upgrade prompts and limit warnings\n- Complete payment workflow from signup to auto-charge\n\n## Database:\n- 11 migration files for complete schema\n- RLS policies for security\n- Triggers for automation\n- Subscription and usage tracking tables\n\n🤖 Generated with Claude Code\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(git config:*)",
+      "Bash(git reset:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd complete CoachCRM SaaS application with RBAC and payment integration\n\nThis commit includes the full implementation of a professional multi-tenant Coaching CRM system with the following features:\n\n## Core Features:\n- ✅ Role-Based Access Control \\(RBAC\\) with 5 roles \\(Owner, Admin, Manager, Coach, Support\\)\n- ✅ Plan-based feature restrictions \\(Standard, Pro, Premium\\)\n- ✅ Razorpay payment integration with subscription management\n- ✅ 7-day trial period with auto-charging\n- ✅ Usage tracking and limit warnings\n- ✅ WhatsApp integration support\n- ✅ AI-powered features \\(churn prediction, client insights\\)\n- ✅ Advanced analytics and reporting\n- ✅ Team management and invitations\n- ✅ Client management with real-time updates\n- ✅ Session scheduling and tracking\n- ✅ Payment processing and invoicing\n- ✅ Responsive dashboard with sidebar navigation\n\n## Technical Stack:\n- Next.js 14.1.0 with App Router\n- TypeScript\n- Supabase \\(PostgreSQL with RLS\\)\n- Razorpay for payments\n- TailwindCSS for styling\n- React components with hooks\n- Server-side API routes\n- Webhook handlers for payment automation\n\n## New Additions in This Commit:\n- Role selection during signup\n- Feature restriction middleware\n- Usage stats component on dashboard\n- Plan-based feature gating for analytics, clients, and team members\n- Upgrade prompts and limit warnings\n- Complete payment workflow from signup to auto-charge\n- Claude Code configuration included\n\n## Database:\n- 11 migration files for complete schema\n- RLS policies for security\n- Triggers for automation\n- Subscription and usage tracking tables\n\n🤖 Generated with Claude Code\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git remote add:*)"
+    ]
+  }
+}
