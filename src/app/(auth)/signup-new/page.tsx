@@ -139,7 +139,7 @@ export default function SignupNewPage() {
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
                       <Check className="h-5 w-5 text-brand-secondary-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{feature}</span>
+                      <span className="text-gray-700">{typeof feature === 'string' ? feature : feature.text}</span>
                     </li>
                   ))}
                 </ul>

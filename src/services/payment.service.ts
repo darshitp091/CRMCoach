@@ -6,13 +6,26 @@ import Razorpay from 'razorpay';
 type PaymentInsert = Database['public']['Tables']['payments']['Insert'];
 type PaymentRow = Database['public']['Tables']['payments']['Row'];
 
-// Initialize Razorpay (server-side only)
-const razorpay = typeof window === 'undefined'
-  ? new Razorpay({
-      key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
-      key_secret: process.env.RAZORPAY_KEY_SECRET!,
-    })
-  : null;
+// Lazy initialize Razorpay (server-side only)
+let razorpay: Razorpay | null = null;
+
+function getRazorpay(): Razorpay {
+  if (typeof window !== 'undefined') {
+    throw new Error('Razorpay can only be used on server-side');
+  }
+
+  if (!razorpay) {
+    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      throw new Error('Razorpay credentials not configured');
+    }
+    razorpay = new Razorpay({
+      key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+  }
+
+  return razorpay;
+}
 
 export interface CreatePaymentData {
   clientId: string;
@@ -36,10 +49,9 @@ export class PaymentService {
    * Create Razorpay order (server-side)
    */
   static async createRazorpayOrder(options: RazorpayOrderOptions) {
-    if (!razorpay) throw new Error('Razorpay not initialized (server-side only)');
-
     try {
-      const order = await razorpay.orders.create({
+      const rz = getRazorpay();
+      const order = await rz.orders.create({
         amount: options.amount,
         currency: options.currency,
         receipt: options.receipt,
@@ -57,7 +69,7 @@ export class PaymentService {
    * Create payment record
    */
   static async create(organizationId: string, data: CreatePaymentData): Promise<PaymentRow> {
-    const paymentData: PaymentInsert = {
+    const paymentData: any = {
       organization_id: organizationId,
       client_id: data.clientId,
       amount: data.amount,
@@ -71,11 +83,11 @@ export class PaymentService {
       metadata: {},
     };
 
-    const { data: payment, error } = await supabase
-      .from('payments')
+    const { data: payment, error } = await ((supabase
+      .from('payments') as any)
       .insert(paymentData)
       .select()
-      .single();
+      .single());
 
     if (error) throw error;
     return payment;
@@ -103,10 +115,10 @@ export class PaymentService {
     const razorpayOrder = await this.createRazorpayOrder(orderOptions);
 
     // Update payment with Razorpay order ID
-    const { error } = await supabase
-      .from('payments')
+    const { error } = await ((supabase
+      .from('payments') as any)
       .update({ razorpay_order_id: razorpayOrder.id })
-      .eq('id', payment.id);
+      .eq('id', payment.id));
 
     if (error) throw error;
 
@@ -124,7 +136,8 @@ export class PaymentService {
     paymentId: string,
     signature: string
   ): boolean {
-    if (!razorpay) throw new Error('Razorpay not initialized (server-side only)');
+    // Verify that we're server-side
+    getRazorpay();
 
     const crypto = require('crypto');
     const text = `${orderId}|${paymentId}`;
@@ -145,11 +158,11 @@ export class PaymentService {
     razorpaySignature: string
   ) {
     // Get payment to verify
-    const { data: payment, error: fetchError } = await supabase
+    const { data: payment, error: fetchError } = await (supabase
       .from('payments')
       .select('*')
       .eq('id', paymentId)
-      .single();
+      .single() as any);
 
     if (fetchError || !payment) throw new Error('Payment not found');
 
@@ -165,15 +178,15 @@ export class PaymentService {
     }
 
     // Update payment status
-    const { error } = await supabase
-      .from('payments')
+    const { error } = await ((supabase
+      .from('payments') as any)
       .update({
         status: 'completed',
         razorpay_payment_id: razorpayPaymentId,
         razorpay_signature: razorpaySignature,
         paid_at: new Date().toISOString(),
       })
-      .eq('id', paymentId);
+      .eq('id', paymentId));
 
     if (error) throw error;
 
@@ -184,13 +197,13 @@ export class PaymentService {
    * Mark payment as failed
    */
   static async markFailed(paymentId: string, reason?: string) {
-    const { error } = await supabase
-      .from('payments')
+    const { error } = await ((supabase
+      .from('payments') as any)
       .update({
         status: 'failed',
         metadata: { failure_reason: reason },
       })
-      .eq('id', paymentId);
+      .eq('id', paymentId));
 
     if (error) throw error;
   }
@@ -199,7 +212,7 @@ export class PaymentService {
    * Get payment by ID
    */
   static async getById(paymentId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('payments')
       .select(`
         *,
@@ -208,7 +221,7 @@ export class PaymentService {
         session:sessions(id, title)
       `)
       .eq('id', paymentId)
-      .single();
+      .single() as any);
 
     if (error) {
       if (error.code === 'PGRST116') return null;
@@ -221,11 +234,11 @@ export class PaymentService {
    * Get payments for client
    */
   static async getByClient(clientId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('payments')
       .select('*')
       .eq('client_id', clientId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as any);
 
     if (error) throw error;
     return data;
@@ -240,7 +253,7 @@ export class PaymentService {
     startDate?: string,
     endDate?: string
   ) {
-    let query = supabase
+    let query: any = supabase
       .from('payments')
       .select(`
         *,
@@ -270,7 +283,7 @@ export class PaymentService {
    * Get pending payments
    */
   static async getPending(organizationId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('payments')
       .select(`
         *,
@@ -278,7 +291,7 @@ export class PaymentService {
       `)
       .eq('organization_id', organizationId)
       .eq('status', 'pending')
-      .order('due_date', { ascending: true, nullsFirst: false });
+      .order('due_date', { ascending: true, nullsFirst: false }) as any);
 
     if (error) throw error;
     return data;
@@ -290,7 +303,7 @@ export class PaymentService {
   static async getOverdue(organizationId: string) {
     const today = new Date().toISOString().split('T')[0];
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('payments')
       .select(`
         *,
@@ -299,7 +312,7 @@ export class PaymentService {
       .eq('organization_id', organizationId)
       .eq('status', 'pending')
       .lt('due_date', today)
-      .order('due_date', { ascending: true });
+      .order('due_date', { ascending: true }) as any);
 
     if (error) throw error;
     return data;
@@ -309,7 +322,7 @@ export class PaymentService {
    * Get payment statistics
    */
   static async getStats(organizationId: string, startDate?: string, endDate?: string) {
-    let query = supabase
+    let query: any = supabase
       .from('payments')
       .select('amount, status, currency, created_at')
       .eq('organization_id', organizationId);
@@ -327,13 +340,13 @@ export class PaymentService {
     if (error) throw error;
 
     const stats = {
-      total_revenue: data.filter(p => p.status === 'completed').reduce((sum, p) => sum + Number(p.amount), 0),
-      pending_amount: data.filter(p => p.status === 'pending').reduce((sum, p) => sum + Number(p.amount), 0),
-      failed_amount: data.filter(p => p.status === 'failed').reduce((sum, p) => sum + Number(p.amount), 0),
-      total_payments: data.length,
-      completed_payments: data.filter(p => p.status === 'completed').length,
-      pending_payments: data.filter(p => p.status === 'pending').length,
-      failed_payments: data.filter(p => p.status === 'failed').length,
+      total_revenue: data?.filter((p: any) => p.status === 'completed').reduce((sum: number, p: any) => sum + Number(p.amount), 0) || 0,
+      pending_amount: data?.filter((p: any) => p.status === 'pending').reduce((sum: number, p: any) => sum + Number(p.amount), 0) || 0,
+      failed_amount: data?.filter((p: any) => p.status === 'failed').reduce((sum: number, p: any) => sum + Number(p.amount), 0) || 0,
+      total_payments: data?.length || 0,
+      completed_payments: data?.filter((p: any) => p.status === 'completed').length || 0,
+      pending_payments: data?.filter((p: any) => p.status === 'pending').length || 0,
+      failed_payments: data?.filter((p: any) => p.status === 'failed').length || 0,
     };
 
     return stats;
@@ -350,17 +363,17 @@ export class PaymentService {
       throw new Error('Cannot refund payment without Razorpay payment ID');
     }
 
-    if (!razorpay) throw new Error('Razorpay not initialized (server-side only)');
+    const rz = getRazorpay();
 
     // Create refund in Razorpay
     const refundAmount = amount ? Math.round(amount * 100) : undefined;
-    const refund = await razorpay.payments.refund(payment.razorpay_payment_id, {
+    const refund = await rz.payments.refund(payment.razorpay_payment_id, {
       amount: refundAmount,
     });
 
     // Update payment status
-    const { error } = await supabase
-      .from('payments')
+    const { error } = await ((supabase
+      .from('payments') as any)
       .update({
         status: 'refunded',
         metadata: {
@@ -370,7 +383,7 @@ export class PaymentService {
           refunded_at: new Date().toISOString(),
         },
       })
-      .eq('id', paymentId);
+      .eq('id', paymentId));
 
     if (error) throw error;
 

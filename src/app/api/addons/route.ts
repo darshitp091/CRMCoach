@@ -19,11 +19,11 @@ export async function GET(req: NextRequest) {
     }
 
     // Get user's organization and plan
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', session.user.id)
-      .single();
+      .single() as any);
 
     if (userError || !user) {
       return NextResponse.json(
@@ -32,11 +32,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const { data: org, error: orgError } = await supabase
+    const { data: org, error: orgError } = await (supabase
       .from('organizations')
       .select('subscription_plan')
       .eq('id', user.organization_id)
-      .single();
+      .single() as any);
 
     if (orgError || !org) {
       return NextResponse.json(
@@ -48,15 +48,15 @@ export async function GET(req: NextRequest) {
     const plan = org.subscription_plan;
 
     // Get active add-ons
-    const { data: activeAddons, error: addonsError } = await supabase
-      .rpc('get_active_addons', { org_id: user.organization_id });
+    const { data: activeAddons, error: addonsError } = await ((supabase as any)
+      .rpc('get_active_addons', { org_id: user.organization_id }));
 
     if (addonsError) {
       console.error('Error fetching active add-ons:', addonsError);
     }
 
     // Build available add-ons based on plan
-    const availableAddons = {
+    const availableAddons: any = {
       clients: {
         ...addOns.clients[plan],
         active: activeAddons?.find((a: any) => a.addon_type === 'clients') || null,

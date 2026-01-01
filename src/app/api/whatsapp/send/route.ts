@@ -37,11 +37,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { data: user } = await supabase
+    const { data: user } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', session.user.id)
-      .single();
+      .single() as any);
 
     if (!user) {
       return NextResponse.json(
@@ -69,12 +69,12 @@ export async function POST(req: NextRequest) {
     let recipientPhone = phoneNumber;
 
     if (clientId && !phoneNumber) {
-      const { data: client } = await supabase
+      const { data: client } = await (supabase
         .from('clients')
         .select('phone')
         .eq('id', clientId)
         .eq('organization_id', user.organization_id)
-        .single();
+        .single() as any);
 
       if (!client || !client.phone) {
         return NextResponse.json(
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
     const result = await sendTextMessage(formattedPhone, message);
 
     // Store message in database
-    await supabase.from('whatsapp_messages').insert({
+    await ((supabase as any).from('whatsapp_messages').insert({
       organization_id: user.organization_id,
       client_id: clientId || null,
       to_phone: formattedPhone,
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
       status: 'sent',
       direction: 'outbound',
       sent_by: session.user.id,
-    });
+    }));
 
     // Increment usage counter
     await incrementUsage(user.organization_id, 'whatsapp', 1);

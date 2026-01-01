@@ -2,11 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 import { supabase } from '@/lib/supabase/client';
 
-// Initialize Razorpay
-const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-});
+// Lazy initialize Razorpay
+let razorpay: Razorpay | null = null;
+
+function getRazorpay(): Razorpay {
+  if (!razorpay) {
+    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      throw new Error('Razorpay credentials not configured');
+    }
+
+    razorpay = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
+    });
+  }
+  return razorpay;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,11 +45,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user profile to find organization
-    const { data: userProfile } = await supabase
+    const { data: userProfile } = await (supabase
       .from('users')
       .select('organization_id, email, full_name')
       .eq('id', user.id)
-      .single();
+      .single() as any);
 
     if (!userProfile) {
       return NextResponse.json(
@@ -60,7 +74,8 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    const order = await razorpay.orders.create(options);
+    const rz = getRazorpay();
+    const order = await rz.orders.create(options);
 
     return NextResponse.json({
       success: true,

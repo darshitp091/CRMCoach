@@ -1,643 +1,392 @@
-# 🚀 Coaching & Consulting CRM SaaS Platform
+# 🚀 CoachCRM - Complete SaaS Platform for Coaching Businesses
 
-A complete, production-ready CRM platform specifically designed for coaching and consulting businesses. Built with Next.js, Supabase, and Razorpay integration.
+A production-ready, multi-tenant CRM platform built specifically for coaching and consulting businesses. Fully integrated with Razorpay payments, advanced RBAC system, and comprehensive automation workflows.
 
-> 📖 **RBAC Documentation:** For detailed information about the Role-Based Access Control system, see [RBAC_FULL_IMPLEMENTATION_DONE.md](RBAC_FULL_IMPLEMENTATION_DONE.md)
+## ✨ Key Features
 
-## 🎯 Subscription & Pricing
+### 🎯 Core Capabilities
+- **Multi-Tenant Architecture** - Complete data isolation with PostgreSQL RLS
+- **Role-Based Access Control** - 5 hierarchical roles with 65+ permissions
+- **Client Management** - Full lifecycle tracking with smart assignments
+- **Session Scheduling** - Calendar integration with automated reminders
+- **Payment Processing** - Razorpay integration with subscriptions & invoicing
+- **Automation Engine** - Trigger-based workflows for emails, WhatsApp, and tasks
+- **Usage Tracking** - Plan-based limits with real-time monitoring
+- **Team Management** - Invite system with secure tokens
+- **Analytics Dashboard** - Real-time insights and custom reports
 
-### 3-Tier Pricing Model (Updated 2025)
+### 💳 Subscription Plans
 
-- **Standard Plan**: ₹1,999/month (₹19,190/year - Save 20%)
-  - Up to 50 clients, 2 team members, 5GB storage
-  - Basic scheduling, email/SMS, basic automation
+**Standard Plan** - ₹1,999/month (₹19,190/year - Save 20%)
+- 25 clients, 1 team member, 5GB storage
+- Email automation, basic scheduling
+- SMS: 100/month, Email: 1,000/month
 
-- **Pro Plan**: ₹3,999/month (₹38,390/year - Save 20%) ⭐ Most Popular
-  - Up to 200 clients, 5 team members, 50GB storage
-  - WhatsApp integration, video calling (50hrs/month), custom branding
+**Pro Plan** - ₹3,999/month (₹38,390/year - Save 20%) ⭐ Most Popular
+- 100 clients, 5 team members, 20GB storage
+- WhatsApp integration, video calls (50hrs/month)
+- SMS: 500/month, Email: 5,000/month
+- AI summaries (20/month) + insights (10/month)
 
-- **Premium Plan**: ₹6,999/month (₹67,190/year - Save 20%)
-  - Unlimited clients & team members, 200GB storage
-  - AI features, unlimited video calling, full API access, dedicated account manager
+**Premium Plan** - ₹6,999/month (₹67,190/year - Save 20%)
+- 500 clients, 15 team members, 100GB storage
+- Unlimited video calls, priority support
+- SMS: 2,000/month, Email: 25,000/month
+- AI summaries (100/month) + insights (50/month)
+- Advanced analytics, custom branding
 
-### Trial & Billing
+**Trial Period:** 7 days free, auto-charged after trial via Razorpay
 
-- **7-Day Free Trial** - No credit card required
-- **Email Verification Required** - All signups must verify email before access
-- **Trial Expiration System** - Automatic notifications at 3 days, 1 day, and on expiration day
-- **Razorpay Integration** - Support for UPI, cards, net banking, wallets
+### 🔐 RBAC System
 
-## ✨ Features
+**5 Main Roles:**
 
-### 🎯 Core Features
+1. **Owner** 👑 - Full system access, billing, cannot be removed
+2. **Admin** 🛡️ - Team management, all clients, AI features ($18/mo seat)
+3. **Manager** 🎯 - Team oversight, client assignments, AI features ($15/mo seat)
+4. **Coach** 👤 - Assigned clients only, own sessions, AI features ($12/mo seat, volume discounts)
+5. **Support** 🎧 - Basic access, no private notes, FREE on paid plans
 
-- **Client Management** - Complete client lifecycle management with status tracking, tags, and custom fields
-- **Session Scheduling** - Book and manage coaching sessions with calendar integration
-- **Payment Processing** - Razorpay integration for payments, invoices, and subscriptions
-- **Automation Engine** - Trigger-based automations for emails, WhatsApp, SMS, and tasks
-- **Communication Hub** - Unified inbox for Email, WhatsApp, and SMS communications
-- **Analytics Dashboard** - Real-time insights into clients, revenue, and sessions
-- **Multi-user Support** - Role-based access control (Owner, Admin, Coach, Member)
-- **Program Management** - Create and sell coaching programs and packages
-- **Feature Gating** - Plan-based feature access control with upgrade prompts
-
-### 🔥 Advanced Features
-
-- **Automated Workflows** - Welcome emails, session reminders, payment confirmations
-- **Smart Triggers** - Event-based automations (client_created, session_scheduled, payment_received, etc.)
-- **Template System** - Customizable email, WhatsApp, and SMS templates
-- **Task Management** - Create and assign tasks to team members
-- **Notes & Documentation** - Session notes, client notes with privacy controls
-- **Multi-tenant Architecture** - Complete data isolation between organizations
-- **Row Level Security** - Database-level security with Supabase RLS
-
-## 🎨 Design System
-
-### Color Palette (Coaching & Consulting Theme)
-
-```javascript
-Primary (Professional Blue): #6366F1   // Trust, Authority, Expertise
-Secondary (Success Green): #10B981    // Growth, Achievement, Progress
-Accent (Warm Orange): #F97316         // Energy, Motivation, Action
-```
+**Security Features:**
+- Database-level RLS policies (12+ policies)
+- Coaches can ONLY access assigned clients
+- Complete audit trail in audit_logs table
+- Token-based team invitations
+- Automatic permission checks on all queries
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 14, React 18, TailwindCSS
-- **Backend**: Supabase (PostgreSQL, Auth, Storage, Realtime)
-- **Payment**: Razorpay (India-focused payment gateway)
-- **Communication**: WhatsApp Business API, Email (Supabase Auth), SMS
-- **State Management**: Zustand
-- **Form Handling**: React Hook Form + Zod
-- **Charts**: Recharts
-- **Icons**: Lucide React
+**Frontend:**
+- Next.js 14.1.0 (App Router)
+- React 18
+- TypeScript
+- TailwindCSS
+- Framer Motion
+- Lucide Icons
+
+**Backend:**
+- Supabase (PostgreSQL, Auth, Storage, Realtime)
+- Razorpay (Payment Gateway)
+- Row Level Security (RLS)
+
+**State & Forms:**
+- Zustand (State Management)
+- React Hook Form + Zod (Form Validation)
+- Recharts (Analytics)
 
 ## 📦 Project Structure
 
 ```
-coaching-crm-saas/
-├── src/
-│   ├── app/                    # Next.js 14 App Router
-│   │   ├── (auth)/            # Authentication pages
-│   │   ├── (dashboard)/       # Main dashboard pages
-│   │   └── api/               # API routes
-│   ├── components/            # React components
-│   │   ├── ui/               # Reusable UI components
-│   │   ├── clients/          # Client management components
-│   │   ├── sessions/         # Session components
-│   │   ├── payments/         # Payment components
-│   │   └── automations/      # Automation components
-│   ├── lib/                  # Utility libraries
-│   │   ├── supabase/        # Supabase client/server
-│   │   └── utils/           # Helper functions
-│   ├── services/            # Business logic services
-│   │   ├── auth.service.ts
-│   │   ├── client.service.ts
-│   │   ├── session.service.ts
-│   │   ├── payment.service.ts
-│   │   └── automation.service.ts
-│   ├── types/               # TypeScript types
-│   └── styles/             # Global styles
-├── supabase/
-│   ├── migrations/         # Database migrations
-│   │   ├── 20250101000000_initial_schema.sql
-│   │   ├── 20250101000001_rls_policies.sql
-│   │   └── 20250101000002_functions_and_triggers.sql
-│   ├── seed.sql           # Seed data
-│   └── config.toml        # Supabase configuration
-├── public/                # Static assets
-├── .env.example          # Environment variables template
-├── package.json
-├── tailwind.config.js
-└── README.md
+src/
+├── app/
+│   ├── (auth)/              # Authentication pages
+│   │   ├── signup/
+│   │   ├── signin/
+│   │   └── callback/
+│   ├── (dashboard)/         # Protected dashboard
+│   │   ├── clients/
+│   │   ├── sessions/
+│   │   ├── analytics/
+│   │   ├── billing/
+│   │   └── settings/
+│   └── api/                 # API routes
+│       ├── addons/
+│       ├── razorpay/
+│       └── webhooks/
+├── components/
+│   ├── ui/                  # Reusable components
+│   ├── dashboard/           # Dashboard widgets
+│   └── subscription/        # Billing components
+├── lib/
+│   ├── supabase/           # Client & server helpers
+│   ├── razorpay/           # Payment integration
+│   ├── auth/               # RBAC & permissions
+│   └── middleware/         # Feature restrictions
+├── services/
+│   ├── auth.service.ts
+│   ├── client.service.ts
+│   ├── session.service.ts
+│   ├── payment.service.ts
+│   └── automation.service.ts
+└── types/                  # TypeScript definitions
 ```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
-- Node.js 18+ and npm/yarn/bun
-- Supabase account (free tier available)
-- Razorpay account (for payment integration)
+- Node.js 18+
+- Supabase account
+- Razorpay account (India)
 - Git
 
 ### Installation
 
-1. **Clone the repository**
-
+1. **Clone repository**
 ```bash
 git clone <your-repo-url>
 cd "CRM Model"
 ```
 
 2. **Install dependencies**
-
 ```bash
 npm install
-# or
-yarn install
-# or
-bun install
 ```
 
-3. **Set up Supabase**
+3. **Configure environment**
 
-```bash
-# Install Supabase CLI
-npm install -g supabase
-
-# Login to Supabase
-supabase login
-
-# Link to your project (or create new one)
-supabase link --project-ref your-project-ref
-
-# Run migrations
-supabase db push
-
-# Optional: Seed demo data
-supabase db seed
-```
-
-4. **Configure environment variables**
-
-Copy `.env.example` to `.env.local` and fill in your credentials:
-
-```bash
-cp .env.example .env.local
-```
-
-Edit `.env.local`:
+Copy `.env.example` to `.env.local`:
 
 ```env
 # Supabase
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 # Razorpay
-NEXT_PUBLIC_RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+NEXT_PUBLIC_RAZORPAY_KEY_ID=your_key_id
+RAZORPAY_KEY_SECRET=your_key_secret
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-NODE_ENV=development
 ```
 
-5. **Run the development server**
+4. **Set up database**
 
+Run Supabase migrations (see `supabase/migrations/` directory):
+```bash
+supabase db push
+```
+
+5. **Run development server**
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000)
 
 ## 📊 Database Schema
 
-### Main Tables
+### Core Tables
+- **organizations** - Multi-tenant org data with subscriptions
+- **users** - User profiles with roles
+- **clients** - Client/lead management
+- **sessions** - Coaching session scheduling
+- **payments** - Payment records with Razorpay
+- **programs** - Coaching packages
+- **automations** - Workflow definitions
+- **templates** - Message templates
+- **tasks** - Task management
+- **communications** - Message history
+- **notes** - Session & client notes
 
-1. **organizations** - Multi-tenant organization data
-2. **users** - User profiles with roles (role, is_supervisor, is_biller)
-3. **clients** - Client/lead management
-4. **sessions** - Coaching session scheduling
-5. **payments** - Payment records with Razorpay
-6. **programs** - Coaching programs/packages
-7. **automations** - Workflow automations
-8. **templates** - Message templates
-9. **tasks** - Task management
-10. **communications** - Communication history
-11. **notes** - Session and client notes
+### RBAC Tables
+- **coach_client_assignments** - Client access control
+- **team_invitations** - Pending invites
+- **audit_logs** - Complete audit trail
 
-**RBAC Tables (Added Dec 2025):**
-
-12. **coach_client_assignments** - Controls which coaches can access which clients
-13. **team_invitations** - Pending team member invites with secure tokens
-14. **audit_logs** - Complete audit trail for compliance and security
-15. **migrations** - Database migration tracking
-
-### Key Relationships
-
-- Organizations → Users (1:many)
-- Organizations → Clients (1:many)
-- Clients → Sessions (1:many)
-- Users (Coaches) → Sessions (1:many)
-- Clients → Payments (1:many)
-- Clients → Programs (many:many)
-
-## 🔐 Authentication & Authorization
-
-### User Roles (RBAC System - ✅ Production Ready)
-
-**5 Main Roles:**
-
-1. **Owner** 👑
-   - Full access to everything
-   - Billing and subscription management
-   - Team management
-   - Organization settings
-   - Cannot be removed or changed
-
-2. **Admin** 🛡️
-   - Near-full access (except billing changes)
-   - Team management
-   - View all clients and sessions
-   - AI features access
-   - $18/month additional seat
-
-3. **Manager** 🎯
-   - Team oversight and coordination
-   - View all clients and sessions
-   - Assign coaches to clients
-   - AI features access
-   - $15/month additional seat
-
-4. **Coach** 👤
-   - View only assigned clients
-   - Manage own sessions
-   - AI features access
-   - $12/month additional seat
-   - Volume discounts: $10/mo (5+), $8/mo (10+)
-
-5. **Support** 🎧
-   - Administrative helper role
-   - Basic client info (no private notes)
-   - Cannot use AI features
-   - FREE on all paid plans
-
-**2 Modifier Roles (FREE, stack with main role):**
-
-- **Supervisor** ⭐ - Can oversee other coaches' work (for licensed supervisors)
-- **Biller** 💰 - Can handle invoicing and payment processing
-
-### Row Level Security (RLS)
-
-**Database-level security enforced by PostgreSQL:**
-
-- ✅ Coaches CANNOT query other coaches' clients (database enforced)
-- ✅ Support staff CANNOT view private session notes
-- ✅ Owner role cannot be removed (account safety)
-- ✅ Organization isolation (multi-tenant security)
-- ✅ Automatic filtering on every query
-
-**12 RLS Policies:**
-- Clients: 6 policies (view, edit, delete by role)
-- Sessions: 5 policies (view, edit by role)
-- Coach assignments: 2 policies (view, manage)
-- Team invitations: 2 policies (view, manage)
-
-**Key Security Features:**
-- Coaches can ONLY see clients assigned to them
-- Support staff blocked from viewing session notes
-- All role changes logged in audit_logs table
-- Token-based secure team invitations
-- Automatic audit trail for compliance
-
-## 💳 Razorpay Integration
-
-### Setup
-
-1. Sign up at [Razorpay Dashboard](https://dashboard.razorpay.com)
-2. Get API keys from Settings → API Keys
-3. Add keys to `.env.local`
-
-### Payment Flow
-
-1. Create payment record in database
-2. Generate Razorpay order
-3. Show Razorpay checkout
-4. Verify payment signature
-5. Update payment status
-6. Trigger automation (receipt email)
-
-### Example Usage
-
-```typescript
-import { PaymentService } from '@/services/payment.service';
-
-// Initialize payment
-const { payment, razorpayOrder } = await PaymentService.initializePayment(
-  organizationId,
-  {
-    clientId: 'client-uuid',
-    amount: 5000,
-    currency: 'INR',
-    description: 'Coaching Program - Month 1',
-  }
-);
-
-// After successful payment
-await PaymentService.completePayment(
-  payment.id,
-  razorpayPaymentId,
-  razorpaySignature
-);
-```
+### Usage & Billing
+- **organization_usage** - Monthly usage tracking
+- **organization_addons** - Add-on purchases
+- **usage_alerts** - Limit warnings
 
 ## 🤖 Automation System
 
-### Trigger Types
+**Trigger Types:**
+- `client_created` - New client onboarding
+- `session_scheduled` - Booking confirmations
+- `session_completed` - Follow-up workflows
+- `payment_received` - Payment receipts
+- `payment_failed` - Failed payment recovery
+- `trial_ending` - Trial expiration reminders
+- Custom triggers
 
-- `client_created` - New client added
-- `session_scheduled` - Session booked
-- `session_completed` - Session finished
-- `payment_received` - Payment successful
-- `payment_failed` - Payment failed
-- `milestone_achieved` - Client milestone
-- `inactivity_detected` - No activity detected
-- `subscription_expiring` - Subscription ending soon
-- `custom` - Custom triggers
+**Action Types:**
+- `send_email` - Email from template
+- `send_whatsapp` - WhatsApp messaging
+- `send_sms` - SMS notifications
+- `create_task` - Task creation
+- `update_client` - Client data updates
+- `webhook` - External API calls
 
-### Action Types
+## 💳 Payment Integration
 
-- `send_email` - Send email from template
-- `send_whatsapp` - Send WhatsApp message
-- `send_sms` - Send SMS
-- `create_task` - Create task
-- `update_client` - Update client data
-- `webhook` - Call external webhook
+**Razorpay Features:**
+- Subscription management
+- One-time payments
+- Auto-charge after trial
+- Payment links
+- Refunds & reconciliation
+- Webhook notifications
 
-### Example Automation
-
-```typescript
-import { AutomationService } from '@/services/automation.service';
-
-await AutomationService.create(organizationId, userId, {
-  name: 'Welcome New Clients',
-  triggerType: 'client_created',
-  actions: [
-    {
-      type: 'send_email',
-      template_id: 'welcome_email',
-      delay_minutes: 0,
-    },
-    {
-      type: 'create_task',
-      config: {
-        title: 'Call new client',
-        assign_to: 'coach',
-      },
-      delay_minutes: 60,
-    },
-  ],
-});
-```
-
-## 📱 Communication Integrations
-
-### WhatsApp Business API
-
-1. Sign up for WhatsApp Business API
-2. Get API credentials
-3. Add to `.env.local`:
-
-```env
-WHATSAPP_API_URL=your_whatsapp_api_url
-WHATSAPP_API_TOKEN=your_whatsapp_api_token
-WHATSAPP_PHONE_NUMBER_ID=your_phone_number_id
-```
-
-### Email (via Supabase Auth)
-
-Supabase handles email out of the box. For custom SMTP:
-
-```env
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASSWORD=your_app_password
-```
-
-### SMS (Twilio/MSG91)
-
-```env
-SMS_PROVIDER=twilio
-TWILIO_ACCOUNT_SID=your_twilio_account_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_PHONE_NUMBER=your_twilio_phone_number
-```
-
-## 📈 Analytics & Reports
-
-Access pre-built analytics functions:
-
-```typescript
-import { supabase } from '@/lib/supabase/client';
-
-// Get dashboard analytics
-const analytics = await supabase.rpc('get_dashboard_analytics', {
-  org_id: organizationId,
-  date_from: '2025-01-01',
-  date_to: '2025-12-31',
-});
-
-// Search clients
-const clients = await supabase.rpc('search_clients', {
-  org_id: organizationId,
-  search_query: 'john',
-  filter_status: 'active',
-});
-
-// Get upcoming sessions
-const sessions = await supabase.rpc('get_upcoming_sessions', {
-  org_id: organizationId,
-  days_ahead: 7,
-});
-```
-
-## 🎨 UI Components
-
-All components built with TailwindCSS using the brand color system:
-
-- `brand-primary-500` - Main brand color
-- `brand-secondary-500` - Success/growth color
-- `brand-accent-500` - Action/CTA color
-
-## 🧪 Testing
-
-```bash
-# Run tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Generate coverage
-npm run test:coverage
-```
+**Supported Methods:**
+- UPI, Cards, Net Banking
+- Wallets, EMI
+- International cards
 
 ## 🚢 Deployment
 
 ### Vercel (Recommended)
 
-1. Push code to GitHub
-2. Connect to Vercel
+1. Push to GitHub
+2. Import to Vercel
 3. Add environment variables
-4. Deploy!
+4. Deploy
 
-### Other Platforms
+**Environment Variables Required:**
+- All from `.env.example`
+- Set `NODE_ENV=production`
 
-Works on any Next.js compatible platform:
-- Netlify
-- Railway
-- AWS Amplify
-- Google Cloud Run
+### Build Verification
+
+```bash
+npm run build
+```
+
+Build completes successfully with:
+- ✅ TypeScript compilation
+- ✅ All type checks passing
+- ✅ Static page generation (44 pages)
+
+## 📈 Usage Limits & Add-Ons
+
+**Tracked Resources:**
+- Active clients
+- Team members
+- Email sends
+- SMS messages
+- WhatsApp messages
+- Video call minutes
+- AI summaries & insights
+- Transcription minutes
+- Storage (GB)
+
+**Add-On Pricing:**
+- Extra clients: ₹99/5 clients
+- SMS packs: ₹199/500 messages
+- WhatsApp packs: ₹299/500 messages
+- Video minutes: ₹599/20 hours
+- AI summaries: ₹499/50 summaries
+- Storage: ₹99/10GB
+- Transcription: ₹799/100 minutes
 
 ## 🔧 Configuration
 
-### Subscription Plans
-
-Edit in database or via admin panel:
-
-- **Free** - 5 clients, 10 sessions/month
-- **Starter** - 50 clients, unlimited sessions (₹999/month)
-- **Professional** - 200 clients, automation, WhatsApp (₹2,499/month)
-- **Business** - Unlimited everything (₹4,999/month)
-
 ### Customization
+- **Colors**: `tailwind.config.js` (brand-primary, secondary, accent)
+- **Plans**: `src/config/pricing.ts`
+- **Email Templates**: Templates table in database
+- **Automation Templates**: `automation.service.ts`
 
-- Colors: `tailwind.config.js`
-- Branding: Organization settings
-- Email templates: Templates table
-- Automation templates: `automation.service.ts`
+### Feature Flags
+Plan-based features automatically gate access:
+- WhatsApp integration (Pro+)
+- Advanced analytics (Pro+)
+- AI features (Pro+)
+- Custom branding (Premium)
+- API access (Premium)
 
-## 📚 API Documentation
+## 📚 API Examples
 
-### RBAC Permission System
-
-```typescript
-import { hasPermission, requirePermission, PERMISSIONS } from '@/lib/auth/permissions';
-
-// Check if user has permission
-const canAddMembers = await hasPermission(userId, PERMISSIONS.ADD_TEAM_MEMBERS);
-
-if (canAddMembers) {
-  // Show invite button
-}
-
-// In API routes - require permission or throw error
-await requirePermission(userId, PERMISSIONS.CHANGE_SUBSCRIPTION);
-
-// Check client access
-import { canAccessClient } from '@/lib/auth/permissions';
-const hasAccess = await canAccessClient(userId, clientId);
-
-// Assign client to coach (Owner/Admin/Manager only)
-import { assignClientToCoach } from '@/lib/auth/permissions';
-const result = await assignClientToCoach(clientId, coachId, assignedByUserId);
-```
-
-### Client Service
-
+### Client Management
 ```typescript
 import { ClientService } from '@/services/client.service';
 
-// Create client
+// Create client (automatically checks limits)
 const client = await ClientService.create(organizationId, {
-  email: 'john@example.com',
+  email: 'client@example.com',
   fullName: 'John Doe',
   status: 'lead',
 });
 
-// Search clients (automatically filtered by role via RLS)
+// Search clients (auto-filtered by RLS)
 const { clients, total } = await ClientService.search(organizationId, {
   searchQuery: 'john',
   status: 'active',
-  limit: 50,
 });
 ```
 
-### Session Service
-
+### Permission Checks
 ```typescript
-import { SessionService } from '@/services/session.service';
+import { hasPermission, canAccessClient, PERMISSIONS } from '@/lib/auth/permissions';
 
-// Create session
-const session = await SessionService.create(organizationId, {
-  clientId: 'client-uuid',
-  coachId: 'coach-uuid',
-  title: 'Strategy Session',
-  scheduledAt: '2025-01-15T10:00:00Z',
-  durationMinutes: 60,
-});
+// Check permission
+const canInvite = await hasPermission(userId, PERMISSIONS.ADD_TEAM_MEMBERS);
 
-// Get upcoming sessions
-const upcoming = await SessionService.getUpcoming(organizationId);
+// Check client access
+const hasAccess = await canAccessClient(userId, clientId);
 ```
+
+### Usage Tracking
+```typescript
+import { checkUsageLimit, trackUsage } from '@/lib/usage-limits';
+
+// Check before action
+const check = await checkUsageLimit(organizationId, 'emails', 1);
+
+if (check.allowed) {
+  // Send email
+  await trackUsage(organizationId, 'emails', 1);
+}
+```
+
+## 🧪 Testing
+
+The application includes comprehensive type safety and build verification:
+
+```bash
+npm run build  # Full TypeScript + build check
+npm run dev    # Development server
+```
+
+## 🎯 Recent Updates (January 2025)
+
+- ✅ Fixed all TypeScript build errors
+- ✅ Lazy-loaded Razorpay initialization for Vercel builds
+- ✅ Added comprehensive type assertions for Supabase queries
+- ✅ Implemented usage tracking and limit warnings
+- ✅ Added client onboarding wizard
+- ✅ Built email notification system
+- ✅ Added role selection during signup
+- ✅ Implemented feature restriction middleware
+- ✅ Created usage stats dashboard
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
+1. Fork repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
 5. Open Pull Request
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT License - see LICENSE file
 
 ## 🆘 Support
 
-- Documentation: Check this README
-- Issues: GitHub Issues
-- Email: support@yourcrm.com
+- **Documentation**: This README
+- **Issues**: GitHub Issues
+- **Database**: Check `supabase/migrations/` for schema
 
-## 🗺️ Roadmap
+## 💡 Perfect For
 
-**✅ Completed (December 2025):**
-- [x] Role-Based Access Control (RBAC) system
-- [x] 5 hierarchical roles with 65+ permissions
-- [x] Database-level security with RLS
-- [x] Team management UI
-- [x] Audit logging system
-- [x] AI features with Gemini API
-- [x] WhatsApp integration
-
-**🚧 In Progress:**
-- [ ] Email invitation sending (Resend API)
-- [ ] Client assignment UI
-- [ ] Dynamic navigation sidebar by role
-
-**📋 Planned:**
-- [ ] Mobile app (React Native)
-- [ ] AI-powered client insights & churn prediction
-- [ ] Calendar integrations (Google, Outlook)
-- [ ] Zoom/Meet integration
-- [ ] Advanced reporting & custom dashboards
-- [ ] API webhooks
-- [ ] White-label options
-- [ ] Multi-language support
-- [ ] Granular permission toggles
-- [ ] Custom roles beyond 5 standard ones
-
-## 💡 Use Cases
-
-Perfect for:
 - Business Coaches
 - Life Coaches
-- Career Coaches
-- Consultants
-- Therapists
+- Career Consultants
+- Therapists & Counselors
 - Fitness Trainers
 - Music Teachers
 - Any 1-on-1 service business
 
-## 🌟 Why This CRM?
+## 🌟 Why CoachCRM?
 
-- **Niche-Specific**: Built specifically for coaching/consulting
-- **All-in-One**: No need for multiple tools
-- **Automation-First**: Save 7-10 hours/week
-- **India-Ready**: Razorpay, WhatsApp, INR support
-- **Affordable**: Much cheaper than enterprise CRMs
-- **Modern Stack**: Fast, secure, scalable
-- **Open Source**: Customize as needed
+- **Niche-Specific** - Built for coaching businesses
+- **All-in-One** - No need for multiple tools
+- **Automation-First** - Save 10+ hours/week
+- **India-Ready** - Razorpay, WhatsApp, INR pricing
+- **Scalable** - Multi-tenant with RLS security
+- **Modern Stack** - Fast, secure, maintainable
+- **Production-Ready** - Complete with RBAC, billing, automation
 
 ---
 
-Built with ❤️ for Coaches and Consultants
-
-**Start transforming your coaching business today!** 🚀
+**Built for coaches who want to focus on coaching, not admin work.** 🚀

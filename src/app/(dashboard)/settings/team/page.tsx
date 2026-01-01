@@ -87,11 +87,11 @@ export default function TeamManagementPage() {
       setCurrentUserId(userId);
 
       // Get current user's info
-      const { data: currentUser, error: userError } = await supabase
+      const { data: currentUser, error: userError } = await (supabase
         .from('users')
         .select('role, organization_id')
         .eq('id', userId)
-        .single();
+        .single() as any);
 
       if (userError || !currentUser) {
         console.error('Error fetching user:', userError);
@@ -122,8 +122,8 @@ export default function TeamManagementPage() {
       }
 
       // Load pending invitations
-      const { data: invites, error: invitesError } = await supabase
-        .from('team_invitations')
+      const { data: invites, error: invitesError } = await (supabase
+        .from('team_invitations') as any)
         .select('*')
         .eq('organization_id', currentUser.organization_id)
         .eq('status', 'pending')
@@ -168,8 +168,8 @@ export default function TeamManagementPage() {
 
   const handleCancelInvitation = async (invitationId: string) => {
     try {
-      const { error } = await supabase
-        .from('team_invitations')
+      const { error } = await (supabase
+        .from('team_invitations') as any)
         .update({ status: 'cancelled' })
         .eq('id', invitationId);
 
@@ -237,12 +237,11 @@ export default function TeamManagementPage() {
       </div>
 
       {/* Team Member Limit Warning */}
-      {features.maxTeamMembers !== -1 && (
+      {typeof features.maxTeamMembers === 'number' && features.maxTeamMembers >= 0 && (
         <LimitWarning
           current={usage.teamMembers}
           limit={features.maxTeamMembers}
           resource="Team Members"
-          suggestedPlan={plan === 'standard' ? 'Pro' : 'Premium'}
         />
       )}
 

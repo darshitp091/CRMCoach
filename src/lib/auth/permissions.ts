@@ -321,11 +321,11 @@ export async function hasPermission(
   permission: string
 ): Promise<boolean> {
   try {
-    const { data: user, error } = await supabase
+    const { data: user, error } = await (supabase
       .from('users')
       .select('role, is_biller')
       .eq('id', userId)
-      .single();
+      .single() as any);
 
     if (error || !user) {
       console.error('Error fetching user role:', error);
@@ -341,7 +341,7 @@ export async function hasPermission(
     }
 
     // Check biller modifier permissions
-    if (user.is_biller && BILLER_PERMISSIONS.includes(permission)) {
+    if (user.is_biller && BILLER_PERMISSIONS.includes(permission as any)) {
       return true;
     }
 
@@ -384,11 +384,11 @@ export async function getCurrentUserRole(
   userId: string
 ): Promise<UserRole | null> {
   try {
-    const { data: user, error } = await supabase
+    const { data: user, error } = await (supabase
       .from('users')
       .select('role')
       .eq('id', userId)
-      .single();
+      .single() as any);
 
     if (error || !user) {
       return null;
@@ -409,11 +409,11 @@ export async function canAccessClient(
   clientId: string
 ): Promise<boolean> {
   try {
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await (supabase
       .from('users')
       .select('role, organization_id')
       .eq('id', userId)
-      .single();
+      .single() as any);
 
     if (userError || !user) return false;
 
@@ -424,12 +424,12 @@ export async function canAccessClient(
 
     // Coaches can only access assigned clients
     if (user.role === 'coach') {
-      const { data: assignment, error: assignError } = await supabase
+      const { data: assignment, error: assignError } = await (supabase
         .from('coach_client_assignments')
         .select('id')
         .eq('coach_id', userId)
         .eq('client_id', clientId)
-        .single();
+        .single() as any);
 
       return !assignError && !!assignment;
     }
@@ -452,16 +452,16 @@ export async function canAccessClient(
  */
 export async function getAssignedClients(coachId: string): Promise<string[]> {
   try {
-    const { data: assignments, error } = await supabase
+    const { data: assignments, error } = await (supabase
       .from('coach_client_assignments')
       .select('client_id')
-      .eq('coach_id', coachId);
+      .eq('coach_id', coachId) as any);
 
     if (error || !assignments) {
       return [];
     }
 
-    return assignments.map((a) => a.client_id);
+    return assignments.map((a: any) => a.client_id);
   } catch (error) {
     console.error('Error fetching assigned clients:', error);
     return [];
@@ -479,19 +479,19 @@ export async function assignClientToCoach(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Get organization ID from client
-    const { data: client, error: clientError } = await supabase
+    const { data: client, error: clientError } = await (supabase
       .from('clients')
       .select('organization_id')
       .eq('id', clientId)
-      .single();
+      .single() as any);
 
     if (clientError || !client) {
       return { success: false, error: 'Client not found' };
     }
 
     // Insert assignment
-    const { error: insertError } = await supabase
-      .from('coach_client_assignments')
+    const { error: insertError } = await (supabase
+      .from('coach_client_assignments') as any)
       .upsert({
         client_id: clientId,
         coach_id: coachId,

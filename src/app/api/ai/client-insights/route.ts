@@ -36,11 +36,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { data: user } = await supabase
+    const { data: user } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', session.user.id)
-      .single();
+      .single() as any);
 
     if (!user) {
       return NextResponse.json(
@@ -65,12 +65,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Get client details
-    const { data: client } = await supabase
+    const { data: client } = await (supabase
       .from('clients')
       .select('*')
       .eq('id', clientId)
       .eq('organization_id', user.organization_id)
-      .single();
+      .single() as any);
 
     if (!client) {
       return NextResponse.json(
@@ -80,14 +80,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Get sessions with AI summaries
-    const { data: sessions } = await supabase
+    const { data: sessions } = await (supabase
       .from('sessions')
       .select('ai_summary, scheduled_at')
       .eq('client_id', clientId)
       .eq('status', 'completed')
       .not('ai_summary', 'is', null)
       .order('scheduled_at', { ascending: false })
-      .limit(10);
+      .limit(10) as any);
 
     const sessionSummaries = (sessions || []).map(s => s.ai_summary).filter(Boolean);
 
@@ -102,10 +102,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Get program enrollments
-    const { data: programs } = await supabase
+    const { data: programs } = await (supabase
       .from('client_programs')
       .select('programs(name)')
-      .eq('client_id', clientId);
+      .eq('client_id', clientId) as any);
 
     const enrolledPrograms = programs?.map(p => p.programs?.name).filter(Boolean) || [];
 
@@ -119,14 +119,14 @@ export async function POST(req: NextRequest) {
     });
 
     // Store insights in database
-    await supabase
+    await ((supabase as any)
       .from('clients')
       .update({
         ai_insights: insights,
         ai_insights_generated_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .eq('id', clientId);
+      .eq('id', clientId));
 
     // Increment usage
     await incrementUsage(user.organization_id, 'ai_insights', 1);

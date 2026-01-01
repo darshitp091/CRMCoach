@@ -1,10 +1,32 @@
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
-// Server-side Razorpay instance
-export const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
+// Lazy initialize Razorpay instance
+let razorpayInstance: Razorpay | null = null;
+
+function getRazorpay(): Razorpay {
+  if (!razorpayInstance) {
+    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      throw new Error('Razorpay credentials not configured');
+    }
+
+    razorpayInstance = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
+    });
+  }
+
+  return razorpayInstance;
+}
+
+// Export for backward compatibility
+export const razorpay = new Proxy({} as Razorpay, {
+  get(_, prop) {
+    return getRazorpay()[prop as keyof Razorpay];
+  }
 });
 
 // Verify Razorpay webhook signature
@@ -38,7 +60,7 @@ export async function createSubscription({
   notes?: Record<string, string>;
 }) {
   try {
-    const subscription = await razorpay.subscriptions.create({
+    const subscription = await (razorpay.subscriptions.create as any)({
       plan_id: planId,
       customer_id: customerId,
       total_count: totalCount,
@@ -100,7 +122,7 @@ export async function cancelSubscription(
   cancelAtCycleEnd: boolean = false
 ) {
   try {
-    const subscription = await razorpay.subscriptions.cancel(subscriptionId, {
+    const subscription = await (razorpay.subscriptions.cancel as any)(subscriptionId, {
       cancel_at_cycle_end: cancelAtCycleEnd ? 1 : 0,
     });
 
@@ -134,7 +156,7 @@ export async function updateSubscription(
 // Fetch all payments for a subscription
 export async function getSubscriptionPayments(subscriptionId: string) {
   try {
-    const payments = await razorpay.subscriptions.fetchAllPayments(subscriptionId);
+    const payments = await (razorpay.subscriptions as any).fetchAllPayments(subscriptionId);
     return { success: true, payments };
   } catch (error: any) {
     console.error('Fetch payments error:', error);

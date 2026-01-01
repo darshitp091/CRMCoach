@@ -36,7 +36,7 @@ export function useRealtimeDashboard(organizationId: string) {
         startOfMonth.setDate(1);
         startOfMonth.setHours(0, 0, 0, 0);
 
-        const { data: analytics, error } = await supabase.rpc('get_dashboard_analytics', {
+        const { data: analytics, error } = await (supabase as any).rpc('get_dashboard_analytics', {
           org_id: organizationId,
           date_from: startOfMonth.toISOString(),
           date_to: new Date().toISOString(),

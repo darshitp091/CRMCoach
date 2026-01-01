@@ -45,11 +45,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Get user's organization
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', session.user.id)
-      .single();
+      .single() as any);
 
     if (userError || !user) {
       return NextResponse.json(
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Create add-on subscription using database function
-    const { data: addonId, error: purchaseError } = await supabase.rpc('purchase_addon', {
+    const { data: addonId, error: purchaseError } = await ((supabase as any).rpc('purchase_addon', {
       org_id: user.organization_id,
       addon_type_param: addonType,
       addon_package_param: addonPackage || null,
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       monthly_limit_param: monthlyLimit,
       razorpay_order_id_param: razorpay_order_id,
       razorpay_payment_id_param: razorpay_payment_id,
-    });
+    }));
 
     if (purchaseError) {
       console.error('Error activating add-on:', purchaseError);

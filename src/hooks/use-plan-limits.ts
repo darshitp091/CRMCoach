@@ -8,7 +8,7 @@ import { RAZORPAY_PLANS, PlanId } from '@/lib/razorpay/config';
 export function usePlanLimits() {
   const [loading, setLoading] = useState(true);
   const [plan, setPlan] = useState<PlanId>('standard');
-  const [features, setFeatures] = useState(RAZORPAY_PLANS.standard.features);
+  const [features, setFeatures] = useState<any>(RAZORPAY_PLANS.standard.features);
   const [usage, setUsage] = useState({
     clients: 0,
     teamMembers: 0,
@@ -28,11 +28,11 @@ export function usePlanLimits() {
       }
 
       // Get organization plan
-      const { data: org } = await supabase
+      const { data: org } = await (supabase
         .from('organizations')
         .select('subscription_plan')
         .eq('id', user.organization_id)
-        .single();
+        .single() as any);
 
       if (org) {
         const planId = (org.subscription_plan || 'standard') as PlanId;

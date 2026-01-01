@@ -79,7 +79,7 @@ export function UsageWidget() {
             Resource Usage
           </CardTitle>
           {hasWarnings && (
-            <Badge variant="destructive">
+            <Badge variant="danger">
               <AlertTriangle className="h-3 w-3 mr-1" />
               {recommendations.length} Alert{recommendations.length > 1 ? 's' : ''}
             </Badge>

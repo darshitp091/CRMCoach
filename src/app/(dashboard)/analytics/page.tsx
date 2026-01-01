@@ -117,7 +117,7 @@ export default function AnalyticsPage() {
       .eq('status', 'completed')
       .gte('paid_at', startDate.toISOString());
 
-    const totalRevenue = payments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
+    const totalRevenue = payments?.reduce((sum, p) => sum + ((p as any).amount || 0), 0) || 0;
 
     // Fetch clients data
     const { data: clients } = await supabase
@@ -127,7 +127,7 @@ export default function AnalyticsPage() {
       .is('deleted_at', null);
 
     const newClients = clients?.filter(
-      (c) => new Date(c.created_at) >= startDate
+      (c: any) => new Date(c.created_at) >= startDate
     ).length || 0;
 
     // Fetch sessions data
@@ -138,13 +138,13 @@ export default function AnalyticsPage() {
       .is('deleted_at', null)
       .gte('scheduled_at', startDate.toISOString());
 
-    const completedSessions = sessions?.filter((s) => s.status === 'completed').length || 0;
+    const completedSessions = sessions?.filter((s: any) => s.status === 'completed').length || 0;
     const totalSessions = sessions?.length || 0;
     const completionRate = totalSessions > 0 ? (completedSessions / totalSessions) * 100 : 0;
 
     // Revenue by month
     const revenueByMonth: { [key: string]: number } = {};
-    payments?.forEach((payment) => {
+    payments?.forEach((payment: any) => {
       const month = new Date(payment.paid_at).toLocaleDateString('en-US', {
         month: 'short',
         year: 'numeric',
@@ -154,13 +154,13 @@ export default function AnalyticsPage() {
 
     // Sessions by status
     const sessionsByStatus: { [key: string]: number } = {};
-    sessions?.forEach((session) => {
+    sessions?.forEach((session: any) => {
       sessionsByStatus[session.status] = (sessionsByStatus[session.status] || 0) + 1;
     });
 
     // Clients by status
     const clientsByStatus: { [key: string]: number } = {};
-    clients?.forEach((client) => {
+    clients?.forEach((client: any) => {
       clientsByStatus[client.status] = (clientsByStatus[client.status] || 0) + 1;
     });
 
@@ -173,7 +173,7 @@ export default function AnalyticsPage() {
 
     // Get enrollment counts for each program
     const topPrograms = await Promise.all(
-      (programs || []).map(async (program) => {
+      (programs || []).map(async (program: any) => {
         const { count } = await supabase
           .from('client_programs')
           .select('*', { count: 'exact', head: true })
@@ -238,7 +238,7 @@ export default function AnalyticsPage() {
   }
 
   // Check if user has access to analytics
-  const hasAnalytics = hasFeature('advancedAnalytics');
+  const hasAnalytics = hasFeature('analytics');
 
   if (!hasAnalytics) {
     return (
@@ -294,12 +294,13 @@ export default function AnalyticsPage() {
             value={timeRange}
             onChange={(e) => setTimeRange(e.target.value as typeof timeRange)}
             className="w-32"
-          >
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="90d">Last 90 days</option>
-            <option value="1y">Last year</option>
-          </Select>
+            options={[
+              { value: '7d', label: 'Last 7 days' },
+              { value: '30d', label: 'Last 30 days' },
+              { value: '90d', label: 'Last 90 days' },
+              { value: '1y', label: 'Last year' },
+            ]}
+          />
           <Button variant="outline" onClick={exportToCSV}>
             <Download className="mr-2 h-4 w-4" />
             Export

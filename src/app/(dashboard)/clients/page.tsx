@@ -87,12 +87,11 @@ export default function ClientsPage() {
       </div>
 
       {/* Client Limit Warning */}
-      {features.maxClients !== -1 && (
+      {typeof features.maxClients === 'number' && features.maxClients >= 0 && (
         <LimitWarning
           current={usage.clients}
           limit={features.maxClients}
           resource="Clients"
-          suggestedPlan={plan === 'standard' ? 'Pro' : 'Premium'}
         />
       )}
 

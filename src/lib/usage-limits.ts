@@ -1,6 +1,30 @@
 import { supabase } from './supabase/client';
 import { SubscriptionPlan } from '@/types/database.types';
-import { getPlanLimits, isLimitExceeded, calculateOverageCost } from '@/config/pricing-new';
+import { pricingPlans } from '@/config/pricing';
+
+// Helper functions for pricing
+const getPlanLimits = (plan: SubscriptionPlan) => {
+  const planConfig = pricingPlans.find(p => p.id === plan);
+  return planConfig || null;
+};
+
+const calculateOverageCost = (plan: SubscriptionPlan, limitType: string, overage: number): number => {
+  // Define overage costs per resource type
+  const overagePricing: Record<string, number> = {
+    clients: 99, // ₹99 per 5 extra clients
+    emails: 0, // No overage for emails
+    sms: 0.10, // ₹0.10 per SMS
+    whatsapp: 0.15, // ₹0.15 per WhatsApp message
+    video_minutes: 1, // ₹1 per minute
+    ai_summaries: 5, // ₹5 per summary
+    ai_insights: 5, // ₹5 per insight
+    transcription_minutes: 2, // ₹2 per minute
+    team_members: 99, // ₹99 per team member
+    storage: 50, // ₹50 per GB
+  };
+
+  return (overagePricing[limitType] || 0) * overage;
+};
 
 export interface UsageCheckResult {
   allowed: boolean;
@@ -33,11 +57,11 @@ export async function checkUsageLimit(
 ): Promise<UsageCheckResult> {
   try {
     // Get organization plan
-    const { data: org, error: orgError } = await supabase
+    const { data: org, error: orgError } = await (supabase
       .from('organizations')
       .select('subscription_plan, subscription_status')
       .eq('id', organizationId)
-      .single();
+      .single() as any);
 
     if (orgError || !org) {
       return {
@@ -169,7 +193,7 @@ export async function incrementUsage(
     const dbUsageType = mapLimitTypeToDbType(usageType);
 
     // Call database function to increment usage
-    const { error } = await supabase.rpc('increment_usage', {
+    const { error } = await (supabase as any).rpc('increment_usage', {
       org_id: organizationId,
       usage_type: dbUsageType,
       amount,
@@ -199,7 +223,7 @@ export async function trackCost(
   metadata?: any
 ): Promise<void> {
   try {
-    await supabase.rpc('track_cost', {
+    await (supabase as any).rpc('track_cost', {
       org_id: organizationId,
       cost_type_param: costType,
       quantity_param: quantity,
@@ -227,12 +251,12 @@ async function getCurrentUsage(
     const billingPeriod = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
 
     // Get usage record
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('organization_usage')
       .select('*')
       .eq('organization_id', organizationId)
       .eq('billing_period', billingPeriod)
-      .single();
+      .single() as any);
 
     if (error || !data) {
       return 0;
@@ -410,7 +434,7 @@ async function sendUsageAlert(
     percentage >= 100 ? 'Upgrade or purchase add-ons to continue.' : 'Consider upgrading to avoid interruption.'
   }`;
 
-  await supabase.from('usage_alerts').insert({
+  await (supabase.from('usage_alerts') as any).insert({
     organization_id: organizationId,
     alert_type: 'usage_warning',
     resource_type: limitType,
@@ -442,12 +466,12 @@ async function checkCostThresholds(organizationId: string): Promise<void> {
     const now = new Date();
     const billingPeriod = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
 
-    const { data: usage } = await supabase
+    const { data: usage } = await (supabase
       .from('organization_usage')
       .select('estimated_monthly_cost, actual_cost_to_date')
       .eq('organization_id', organizationId)
       .eq('billing_period', billingPeriod)
-      .single();
+      .single() as any);
 
     if (!usage) return;
 
@@ -486,12 +510,12 @@ export async function getUsageSummary(organizationId: string) {
     const now = new Date();
     const billingPeriod = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('organization_usage')
       .select('*')
       .eq('organization_id', organizationId)
       .eq('billing_period', billingPeriod)
-      .single();
+      .single() as any);
 
     if (error || !data) {
       return null;

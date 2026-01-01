@@ -41,7 +41,7 @@ export class ClientService {
    * Create a new client
    */
   static async create(organizationId: string, data: CreateClientData): Promise<ClientRow> {
-    const clientData: ClientInsert = {
+    const clientData: any = {
       organization_id: organizationId,
       email: data.email,
       full_name: data.fullName,
@@ -58,11 +58,11 @@ export class ClientService {
       custom_fields: {},
     };
 
-    const { data: client, error } = await supabase
-      .from('clients')
+    const { data: client, error } = await ((supabase
+      .from('clients') as any)
       .insert(clientData)
       .select()
-      .single();
+      .single());
 
     if (error) throw error;
     return client;
@@ -92,7 +92,7 @@ export class ClientService {
    * Update client
    */
   static async update(clientId: string, data: UpdateClientData): Promise<ClientRow> {
-    const updateData: ClientUpdate = {
+    const updateData: any = {
       full_name: data.fullName,
       email: data.email,
       phone: data.phone,
@@ -112,17 +112,17 @@ export class ClientService {
 
     // Remove undefined values
     Object.keys(updateData).forEach(key => {
-      if (updateData[key as keyof ClientUpdate] === undefined) {
-        delete updateData[key as keyof ClientUpdate];
+      if (updateData[key] === undefined) {
+        delete updateData[key];
       }
     });
 
-    const { data: client, error } = await supabase
-      .from('clients')
+    const { data: client, error } = await ((supabase
+      .from('clients') as any)
       .update(updateData)
       .eq('id', clientId)
       .select()
-      .single();
+      .single());
 
     if (error) throw error;
     return client;
@@ -132,10 +132,10 @@ export class ClientService {
    * Delete client (soft delete)
    */
   static async delete(clientId: string): Promise<void> {
-    const { error } = await supabase
-      .from('clients')
+    const { error } = await ((supabase
+      .from('clients') as any)
       .update({ deleted_at: new Date().toISOString() })
-      .eq('id', clientId);
+      .eq('id', clientId));
 
     if (error) throw error;
   }
@@ -273,21 +273,21 @@ export class ClientService {
    * Get client statistics
    */
   static async getStats(organizationId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('clients')
       .select('status')
       .eq('organization_id', organizationId)
-      .is('deleted_at', null);
+      .is('deleted_at', null) as any);
 
     if (error) throw error;
 
     const stats = {
-      total: data.length,
-      lead: data.filter(c => c.status === 'lead').length,
-      prospect: data.filter(c => c.status === 'prospect').length,
-      active: data.filter(c => c.status === 'active').length,
-      inactive: data.filter(c => c.status === 'inactive').length,
-      churned: data.filter(c => c.status === 'churned').length,
+      total: data?.length || 0,
+      lead: data?.filter((c: any) => c.status === 'lead').length || 0,
+      prospect: data?.filter((c: any) => c.status === 'prospect').length || 0,
+      active: data?.filter((c: any) => c.status === 'active').length || 0,
+      inactive: data?.filter((c: any) => c.status === 'inactive').length || 0,
+      churned: data?.filter((c: any) => c.status === 'churned').length || 0,
     };
 
     return stats;
@@ -323,18 +323,18 @@ export class ClientService {
    * Get all unique tags for organization
    */
   static async getAllTags(organizationId: string): Promise<string[]> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('clients')
       .select('tags')
       .eq('organization_id', organizationId)
-      .is('deleted_at', null);
+      .is('deleted_at', null) as any);
 
     if (error) throw error;
 
     const allTags = new Set<string>();
-    data.forEach(client => {
+    data?.forEach((client: any) => {
       if (client.tags) {
-        client.tags.forEach(tag => allTags.add(tag));
+        client.tags.forEach((tag: string) => allTags.add(tag));
       }
     });
 

@@ -336,7 +336,6 @@ export default function SessionsPage() {
       completed: 'bg-gray-100 text-gray-700',
       cancelled: 'bg-red-100 text-red-700',
       no_show: 'bg-orange-100 text-orange-700',
-      rescheduled: 'bg-yellow-100 text-yellow-700',
     };
 
     return (
@@ -390,14 +389,15 @@ export default function SessionsPage() {
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as SessionStatus | 'all')}
               className="w-full sm:w-48"
-            >
-              <option value="all">All Statuses</option>
-              <option value="scheduled">Scheduled</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-              <option value="no_show">No Show</option>
-            </Select>
+              options={[
+                { value: 'all', label: 'All Statuses' },
+                { value: 'scheduled', label: 'Scheduled' },
+                { value: 'confirmed', label: 'Confirmed' },
+                { value: 'completed', label: 'Completed' },
+                { value: 'cancelled', label: 'Cancelled' },
+                { value: 'no_show', label: 'No Show' },
+              ]}
+            />
             <div className="flex gap-2">
               <Button
                 variant={viewMode === 'calendar' ? 'default' : 'outline'}

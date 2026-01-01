@@ -18,21 +18,21 @@ export async function checkFeatureAccess(
 ): Promise<FeatureCheckResult> {
   try {
     // Get user's organization and plan
-    const { data: user } = await supabase
+    const { data: user } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', userId)
-      .single();
+      .single() as any);
 
-    if (!user?.organization_id) {
+    if (!user || !user.organization_id) {
       return { allowed: false, reason: 'No organization found' };
     }
 
-    const { data: org } = await supabase
+    const { data: org } = await (supabase
       .from('organizations')
       .select('subscription_plan, subscription_status')
       .eq('id', user.organization_id)
-      .single();
+      .single() as any);
 
     if (!org) {
       return { allowed: false, reason: 'Organization not found' };
@@ -86,11 +86,11 @@ export async function checkFeatureAccess(
  */
 export async function checkClientLimit(organizationId: string): Promise<FeatureCheckResult> {
   try {
-    const { data: org } = await supabase
+    const { data: org } = await (supabase
       .from('organizations')
       .select('subscription_plan')
       .eq('id', organizationId)
-      .single();
+      .single() as any);
 
     if (!org) {
       return { allowed: false, reason: 'Organization not found' };
@@ -140,11 +140,11 @@ export async function checkClientLimit(organizationId: string): Promise<FeatureC
  */
 export async function checkTeamMemberLimit(organizationId: string): Promise<FeatureCheckResult> {
   try {
-    const { data: org } = await supabase
+    const { data: org } = await (supabase
       .from('organizations')
       .select('subscription_plan')
       .eq('id', organizationId)
-      .single();
+      .single() as any);
 
     if (!org) {
       return { allowed: false, reason: 'Organization not found' };
@@ -193,11 +193,11 @@ export async function checkTeamMemberLimit(organizationId: string): Promise<Feat
  */
 export async function checkVideoCallLimit(organizationId: string): Promise<FeatureCheckResult> {
   try {
-    const { data: org } = await supabase
+    const { data: org } = await (supabase
       .from('organizations')
       .select('subscription_plan')
       .eq('id', organizationId)
-      .single();
+      .single() as any);
 
     if (!org) {
       return { allowed: false, reason: 'Organization not found' };
@@ -215,7 +215,7 @@ export async function checkVideoCallLimit(organizationId: string): Promise<Featu
       };
     }
 
-    if (maxHours === -1) {
+    if (typeof maxHours === 'number' && maxHours < 0) {
       return { allowed: true };
     }
 
@@ -237,21 +237,21 @@ export async function checkVideoCallLimit(organizationId: string): Promise<Featu
  */
 export async function getUserPlanDetails(userId: string) {
   try {
-    const { data: user } = await supabase
+    const { data: user } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', userId)
-      .single();
+      .single() as any);
 
-    if (!user?.organization_id) {
+    if (!user || !user.organization_id) {
       return null;
     }
 
-    const { data: org } = await supabase
+    const { data: org } = await (supabase
       .from('organizations')
       .select('subscription_plan, subscription_status, trial_ends_at')
       .eq('id', user.organization_id)
-      .single();
+      .single() as any);
 
     if (!org) {
       return null;

@@ -71,7 +71,7 @@ export default function ProgramsPage() {
         if (programsData) {
           // For each program, get enrollment count
           const programsWithCounts = await Promise.all(
-            programsData.map(async (program) => {
+            programsData.map(async (program: any) => {
               const { count } = await supabase
                 .from('client_programs')
                 .select('*', { count: 'exact', head: true })

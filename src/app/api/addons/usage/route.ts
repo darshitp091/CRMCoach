@@ -20,11 +20,11 @@ export async function GET(req: NextRequest) {
     }
 
     // Get user's organization
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', session.user.id)
-      .single();
+      .single() as any);
 
     if (userError || !user) {
       return NextResponse.json(
@@ -33,11 +33,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const { data: org, error: orgError } = await supabase
+    const { data: org, error: orgError } = await (supabase
       .from('organizations')
       .select('subscription_plan')
       .eq('id', user.organization_id)
-      .single();
+      .single() as any);
 
     if (orgError || !org) {
       return NextResponse.json(
@@ -53,8 +53,8 @@ export async function GET(req: NextRequest) {
     const planLimits = getPlanLimits(org.subscription_plan);
 
     // Get active add-ons
-    const { data: activeAddons, error: addonsError } = await supabase
-      .rpc('get_addon_usage_summary', { org_id: user.organization_id });
+    const { data: activeAddons, error: addonsError } = await ((supabase as any)
+      .rpc('get_addon_usage_summary', { org_id: user.organization_id }));
 
     if (addonsError) {
       console.error('Error fetching add-on usage:', addonsError);

@@ -19,13 +19,13 @@ export function TrialBanner() {
 
       if (!user?.organization_id) return;
 
-      const { data: org } = await supabase
+      const { data: org } = await (supabase
         .from('organizations')
         .select('subscription_status, subscription_plan, trial_ends_at')
         .eq('id', user.organization_id)
-        .single();
+        .single() as any);
 
-      if (org?.subscription_status === 'trial' && org.trial_ends_at) {
+      if (org && org.subscription_status === 'trial' && org.trial_ends_at) {
         const trialEnd = new Date(org.trial_ends_at);
         const today = new Date();
         const diffTime = trialEnd.getTime() - today.getTime();

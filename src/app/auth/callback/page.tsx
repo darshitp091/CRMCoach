@@ -39,26 +39,26 @@ export default function AuthCallbackPage() {
         await new Promise(resolve => setTimeout(resolve, 1500));
 
         // Check if user has an organization
-        const { data: userProfile, error: profileError } = await supabase
+        const { data: userProfile, error: profileError } = await (supabase
           .from('users')
           .select('organization_id, role')
           .eq('id', data.user.id)
-          .single();
+          .single() as any);
 
         if (profileError) {
           console.error('Profile error:', profileError);
         }
 
         // If this is a signup confirmation and no organization exists, create one
-        if (type === 'signup' && !userProfile?.organization_id) {
+        if (type === 'signup' && userProfile && !userProfile.organization_id) {
           // Get organization details from user metadata or generate defaults
           const orgName = data.user.user_metadata?.organization_name || `${data.user.user_metadata?.full_name}'s Organization`;
           const orgSlug = data.user.user_metadata?.organization_slug || `org-${data.user.id.substring(0, 8)}`;
           const selectedPlan = data.user.user_metadata?.selected_plan || 'standard';
 
           // Create organization with 7-day trial
-          const { data: org, error: orgError } = await supabase
-            .from('organizations')
+          const { data: org, error: orgError } = await ((supabase
+            .from('organizations') as any)
             .insert({
               name: orgName,
               slug: orgSlug,
@@ -67,7 +67,7 @@ export default function AuthCallbackPage() {
               trial_ends_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
             })
             .select()
-            .single();
+            .single());
 
           if (orgError) {
             console.error('Organization creation error:', orgError);
@@ -75,13 +75,13 @@ export default function AuthCallbackPage() {
           }
 
           // Update user with organization_id and set as owner
-          const { error: updateError } = await supabase
-            .from('users')
+          const { error: updateError } = await ((supabase
+            .from('users') as any)
             .update({
               organization_id: org.id,
               role: 'owner',
             })
-            .eq('id', data.user.id);
+            .eq('id', data.user.id));
 
           if (updateError) {
             console.error('User update error:', updateError);

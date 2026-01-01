@@ -127,7 +127,7 @@ export default function SignupPage() {
               Choose Your Plan (7-day free trial)
             </label>
             <div className="grid grid-cols-3 gap-3">
-              {pricingPlans.filter(p => p.id !== 'enterprise').map((plan) => (
+              {pricingPlans.filter(p => p.id !== 'enterprise' as any).map((plan) => (
                 <button
                   key={plan.id}
                   type="button"
@@ -149,7 +149,7 @@ export default function SignupPage() {
                     <span className="text-xs text-gray-500">/mo</span>
                   </p>
                   <p className="text-xs text-gray-600 mt-1">
-                    {plan.features[0]}
+                    {typeof plan.features[0] === 'string' ? plan.features[0] : plan.features[0]?.text}
                   </p>
                 </button>
               ))}

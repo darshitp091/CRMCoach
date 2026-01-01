@@ -32,7 +32,7 @@ export class SessionService {
    * Create a new session
    */
   static async create(organizationId: string, data: CreateSessionData): Promise<SessionRow> {
-    const sessionData: SessionInsert = {
+    const sessionData: any = {
       organization_id: organizationId,
       client_id: data.clientId,
       coach_id: data.coachId,
@@ -51,11 +51,11 @@ export class SessionService {
       action_items: [],
     };
 
-    const { data: session, error } = await supabase
-      .from('sessions')
+    const { data: session, error } = await ((supabase
+      .from('sessions') as any)
       .insert(sessionData)
       .select()
-      .single();
+      .single());
 
     if (error) throw error;
     return session;
@@ -65,7 +65,7 @@ export class SessionService {
    * Get session by ID
    */
   static async getById(sessionId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('sessions')
       .select(`
         *,
@@ -74,7 +74,7 @@ export class SessionService {
         program:programs(id, name)
       `)
       .eq('id', sessionId)
-      .single();
+      .single() as any);
 
     if (error) {
       if (error.code === 'PGRST116') return null;
@@ -87,7 +87,7 @@ export class SessionService {
    * Update session
    */
   static async update(sessionId: string, data: UpdateSessionData): Promise<SessionRow> {
-    const updateData: SessionUpdate = {
+    const updateData: any = {
       title: data.title,
       description: data.description,
       session_type: data.sessionType,
@@ -104,17 +104,17 @@ export class SessionService {
 
     // Remove undefined values
     Object.keys(updateData).forEach(key => {
-      if (updateData[key as keyof SessionUpdate] === undefined) {
-        delete updateData[key as keyof SessionUpdate];
+      if (updateData[key] === undefined) {
+        delete updateData[key];
       }
     });
 
-    const { data: session, error } = await supabase
-      .from('sessions')
+    const { data: session, error } = await ((supabase
+      .from('sessions') as any)
       .update(updateData)
       .eq('id', sessionId)
       .select()
-      .single();
+      .single());
 
     if (error) throw error;
     return session;
@@ -124,10 +124,10 @@ export class SessionService {
    * Delete session (soft delete)
    */
   static async delete(sessionId: string): Promise<void> {
-    const { error } = await supabase
-      .from('sessions')
+    const { error } = await ((supabase
+      .from('sessions') as any)
       .update({ deleted_at: new Date().toISOString() })
-      .eq('id', sessionId);
+      .eq('id', sessionId));
 
     if (error) throw error;
   }
@@ -136,7 +136,7 @@ export class SessionService {
    * Get all sessions for an organization
    */
   static async getAll(organizationId: string) {
-    const { data, error} = await supabase
+    const { data, error} = await (supabase
       .from('sessions')
       .select(`
         *,
@@ -145,7 +145,7 @@ export class SessionService {
       `)
       .eq('organization_id', organizationId)
       .is('deleted_at', null)
-      .order('scheduled_at', { ascending: false });
+      .order('scheduled_at', { ascending: false }) as any);
 
     if (error) throw error;
     return data;
@@ -155,7 +155,7 @@ export class SessionService {
    * Get upcoming sessions
    */
   static async getUpcoming(organizationId: string, coachId?: string, daysAhead: number = 7) {
-    let query = supabase
+    let query: any = supabase
       .from('sessions')
       .select(`
         *,
@@ -182,7 +182,7 @@ export class SessionService {
    * Get past sessions
    */
   static async getPast(organizationId: string, coachId?: string, limit: number = 50) {
-    let query = supabase
+    let query: any = supabase
       .from('sessions')
       .select(`
         *,
@@ -210,7 +210,7 @@ export class SessionService {
    * Get sessions for a client
    */
   static async getByClient(clientId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('sessions')
       .select(`
         *,
@@ -218,7 +218,7 @@ export class SessionService {
       `)
       .eq('client_id', clientId)
       .is('deleted_at', null)
-      .order('scheduled_at', { ascending: false });
+      .order('scheduled_at', { ascending: false }) as any);
 
     if (error) throw error;
     return data;
@@ -228,7 +228,7 @@ export class SessionService {
    * Get sessions for a coach
    */
   static async getByCoach(coachId: string, startDate?: string, endDate?: string) {
-    let query = supabase
+    let query: any = supabase
       .from('sessions')
       .select(`
         *,
@@ -294,7 +294,7 @@ export class SessionService {
     const sessionStart = new Date(scheduledAt);
     const sessionEnd = new Date(sessionStart.getTime() + durationMinutes * 60000);
 
-    let query = supabase
+    let query: any = supabase
       .from('sessions')
       .select('id, title, scheduled_at, duration_minutes')
       .eq('coach_id', coachId)
@@ -317,7 +317,7 @@ export class SessionService {
    * Get session statistics
    */
   static async getStats(organizationId: string, startDate?: string, endDate?: string) {
-    let query = supabase
+    let query: any = supabase
       .from('sessions')
       .select('status, scheduled_at')
       .eq('organization_id', organizationId)
@@ -335,12 +335,12 @@ export class SessionService {
     if (error) throw error;
 
     const stats = {
-      total: data.length,
-      scheduled: data.filter(s => s.status === 'scheduled').length,
-      confirmed: data.filter(s => s.status === 'confirmed').length,
-      completed: data.filter(s => s.status === 'completed').length,
-      cancelled: data.filter(s => s.status === 'cancelled').length,
-      noShow: data.filter(s => s.status === 'no_show').length,
+      total: data?.length || 0,
+      scheduled: data?.filter((s: any) => s.status === 'scheduled').length || 0,
+      confirmed: data?.filter((s: any) => s.status === 'confirmed').length || 0,
+      completed: data?.filter((s: any) => s.status === 'completed').length || 0,
+      cancelled: data?.filter((s: any) => s.status === 'cancelled').length || 0,
+      noShow: data?.filter((s: any) => s.status === 'no_show').length || 0,
     };
 
     return stats;
@@ -353,7 +353,7 @@ export class SessionService {
     const startTime = new Date();
     const endTime = new Date(Date.now() + hoursAhead * 60 * 60 * 1000);
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('sessions')
       .select(`
         *,
@@ -365,7 +365,7 @@ export class SessionService {
       .in('status', ['scheduled', 'confirmed'])
       .eq('reminder_sent', false)
       .gte('scheduled_at', startTime.toISOString())
-      .lte('scheduled_at', endTime.toISOString());
+      .lte('scheduled_at', endTime.toISOString()) as any);
 
     if (error) throw error;
     return data;
@@ -375,13 +375,13 @@ export class SessionService {
    * Mark reminder as sent
    */
   static async markReminderSent(sessionId: string) {
-    const { error } = await supabase
-      .from('sessions')
+    const { error } = await ((supabase
+      .from('sessions') as any)
       .update({
         reminder_sent: true,
         reminder_sent_at: new Date().toISOString(),
       })
-      .eq('id', sessionId);
+      .eq('id', sessionId));
 
     if (error) throw error;
   }

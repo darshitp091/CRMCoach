@@ -239,7 +239,9 @@ export default function PricingPage() {
                       <span className={`text-sm ${plan.popular ? 'text-white/95' : feature.included ? 'text-gray-700' : 'text-gray-400'} flex items-center gap-2`}>
                         {feature.text}
                         {feature.tooltip && (
-                          <Info className="h-3 w-3 opacity-50" title={feature.tooltip} />
+                          <span title={feature.tooltip}>
+                            <Info className="h-3 w-3 opacity-50" />
+                          </span>
                         )}
                       </span>
                     </li>

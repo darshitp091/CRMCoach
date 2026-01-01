@@ -42,7 +42,7 @@ export default function DashboardPage() {
       const currentUser = await AuthService.getCurrentUser();
       setUser(currentUser);
 
-      if (currentUser) {
+      if (currentUser && currentUser.role) {
         setUserRole(currentUser.role as UserRole);
 
         // Check permissions

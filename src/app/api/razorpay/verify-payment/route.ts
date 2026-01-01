@@ -37,11 +37,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user profile
-    const { data: userProfile } = await supabase
+    const { data: userProfile } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', user.id)
-      .single();
+      .single() as any);
 
     if (!userProfile?.organization_id) {
       return NextResponse.json(
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update organization subscription
-    const { error: updateError } = await supabase
+    const { error: updateError } = await ((supabase as any)
       .from('organizations')
       .update({
         subscription_plan: plan,
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
         subscription_end_date: subscriptionEndDate.toISOString(),
         razorpay_subscription_id: razorpay_payment_id,
       })
-      .eq('id', userProfile.organization_id);
+      .eq('id', userProfile.organization_id));
 
     if (updateError) {
       console.error('Failed to update subscription:', updateError);
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Record payment
-    const { error: paymentError } = await supabase
+    const { error: paymentError } = await ((supabase as any)
       .from('payments')
       .insert({
         organization_id: userProfile.organization_id,
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
           cycle,
           subscription_type: 'upgrade',
         },
-      });
+      }));
 
     if (paymentError) {
       console.error('Failed to record payment:', paymentError);

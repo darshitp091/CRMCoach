@@ -84,11 +84,11 @@ async function handleIncomingMessage(message: any, metadata: any) {
     }
 
     // Find client by phone number
-    const { data: clients } = await supabase
+    const { data: clients } = await ((supabase as any)
       .from('clients')
       .select('id, organization_id, full_name')
       .eq('phone', fromPhone)
-      .limit(1);
+      .limit(1));
 
     const client = clients?.[0];
 
@@ -99,7 +99,7 @@ async function handleIncomingMessage(message: any, metadata: any) {
     }
 
     // Store incoming message
-    await supabase.from('whatsapp_messages').insert({
+    await ((supabase as any).from('whatsapp_messages').insert({
       organization_id: client.organization_id,
       client_id: client.id,
       from_phone: fromPhone,
@@ -109,7 +109,7 @@ async function handleIncomingMessage(message: any, metadata: any) {
       status: 'received',
       direction: 'inbound',
       timestamp: new Date(message.timestamp * 1000).toISOString(),
-    });
+    }));
 
     // TODO: Create notification for coach about new message
     // TODO: Auto-reply if configured
@@ -128,7 +128,7 @@ async function handleMessageStatus(status: any) {
     const statusValue = status.status; // 'sent', 'delivered', 'read', 'failed'
 
     // Update message status in database
-    await supabase
+    await ((supabase as any)
       .from('whatsapp_messages')
       .update({
         status: statusValue,
@@ -137,7 +137,7 @@ async function handleMessageStatus(status: any) {
         failed_at: statusValue === 'failed' ? new Date().toISOString() : undefined,
         error_message: status.errors?.[0]?.message || null,
       })
-      .eq('whatsapp_message_id', messageId);
+      .eq('whatsapp_message_id', messageId));
   } catch (error) {
     console.error('Error handling message status:', error);
   }

@@ -52,10 +52,10 @@ export function UsageStats() {
               <span className="font-medium text-gray-700">Clients</span>
             </div>
             <span className={`font-semibold ${getColorClass(clientPercentage)}`}>
-              {usage.clients} / {features.maxClients === -1 ? '∞' : features.maxClients}
+              {usage.clients} / {typeof features.maxClients === 'number' && features.maxClients < 0 ? '∞' : features.maxClients}
             </span>
           </div>
-          {features.maxClients !== -1 && (
+          {typeof features.maxClients === 'number' && features.maxClients >= 0 && (
             <div className="space-y-1">
               <Progress value={clientPercentage} className="h-2" indicatorClassName={getProgressColor(clientPercentage)} />
               <p className="text-xs text-gray-500">
@@ -79,10 +79,10 @@ export function UsageStats() {
               <span className="font-medium text-gray-700">Team Members</span>
             </div>
             <span className={`font-semibold ${getColorClass(teamPercentage)}`}>
-              {usage.teamMembers} / {features.maxTeamMembers === -1 ? '∞' : features.maxTeamMembers}
+              {usage.teamMembers} / {typeof features.maxTeamMembers === 'number' && features.maxTeamMembers < 0 ? '∞' : features.maxTeamMembers}
             </span>
           </div>
-          {features.maxTeamMembers !== -1 && (
+          {typeof features.maxTeamMembers === 'number' && features.maxTeamMembers >= 0 && (
             <div className="space-y-1">
               <Progress value={teamPercentage} className="h-2" indicatorClassName={getProgressColor(teamPercentage)} />
               <p className="text-xs text-gray-500">
@@ -123,12 +123,12 @@ export function UsageStats() {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              {features.advancedAnalytics ? (
+              {(features as any).analytics === 'advanced' ? (
                 <div className="h-2 w-2 rounded-full bg-green-500" />
               ) : (
                 <div className="h-2 w-2 rounded-full bg-gray-300" />
               )}
-              <span className={features.advancedAnalytics ? 'text-gray-700' : 'text-gray-400'}>
+              <span className={(features as any).analytics === 'advanced' ? 'text-gray-700' : 'text-gray-400'}>
                 Advanced Analytics
               </span>
             </div>

@@ -21,11 +21,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user details
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await (supabase
       .from('users')
       .select('email, full_name')
       .eq('id', userId)
-      .single();
+      .single() as any);
 
     if (userError || !user) {
       return NextResponse.json(
@@ -35,11 +35,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Get organization details
-    const { data: org, error: orgError } = await supabase
+    const { data: org, error: orgError } = await (supabase
       .from('organizations')
       .select('*')
       .eq('id', organizationId)
-      .single();
+      .single() as any);
 
     if (orgError || !org) {
       return NextResponse.json(
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const subscription = subscriptionResult.subscription;
+    const subscription: any = subscriptionResult.subscription;
 
     // Update organization with subscription details
     const { error: updateError } = await supabase

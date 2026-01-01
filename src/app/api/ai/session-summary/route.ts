@@ -48,11 +48,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Get user's organization
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', session.user.id)
-      .single();
+      .single() as any);
 
     if (userError || !user) {
       return NextResponse.json(
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Get session details
-    const { data: sessionData, error: sessionError } = await supabase
+    const { data: sessionData, error: sessionError } = await (supabase
       .from('sessions')
       .select(`
         *,
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       `)
       .eq('id', sessionId)
       .eq('organization_id', user.organization_id)
-      .single();
+      .single() as any);
 
     if (sessionError || !sessionData) {
       return NextResponse.json(
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Store summary in database
-    const { error: updateError } = await supabase
+    const { error: updateError } = await ((supabase as any)
       .from('sessions')
       .update({
         ai_summary: summary.summary,
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
         ai_sentiment: summary.sentiment,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', sessionId);
+      .eq('id', sessionId));
 
     if (updateError) {
       console.error('Error saving AI summary:', updateError);

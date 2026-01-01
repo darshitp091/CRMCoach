@@ -26,23 +26,23 @@ export function useSubscriptionStatus() {
         }
 
         // Get user's organization
-        const { data: userProfile } = await supabase
+        const { data: userProfile } = await (supabase
           .from('users')
           .select('organization_id')
           .eq('id', user.id)
-          .single();
+          .single() as any);
 
-        if (!userProfile?.organization_id) {
+        if (!userProfile || !userProfile.organization_id) {
           setLoading(false);
           return;
         }
 
         // Get organization subscription details
-        const { data: org } = await supabase
+        const { data: org } = await (supabase
           .from('organizations')
           .select('subscription_plan, subscription_status, trial_ends_at')
           .eq('id', userProfile.organization_id)
-          .single();
+          .single() as any);
 
         if (!org) {
           setLoading(false);

@@ -36,11 +36,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { data: user } = await supabase
+    const { data: user } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', session.user.id)
-      .single();
+      .single() as any);
 
     if (!user) {
       return NextResponse.json(
@@ -65,12 +65,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Get client details
-    const { data: client, error: clientError } = await supabase
+    const { data: client, error: clientError } = await (supabase
       .from('clients')
       .select('*')
       .eq('id', clientId)
       .eq('organization_id', user.organization_id)
-      .single();
+      .single() as any);
 
     if (clientError || !client) {
       return NextResponse.json(
@@ -80,12 +80,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Get session history
-    const { data: sessions } = await supabase
+    const { data: sessions } = await (supabase
       .from('sessions')
       .select('scheduled_at, status')
       .eq('client_id', clientId)
       .order('scheduled_at', { ascending: false })
-      .limit(50);
+      .limit(50) as any);
 
     const sessionHistory = (sessions || []).map(s => ({
       date: s.scheduled_at,
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Store prediction in database
-    await supabase
+    await ((supabase as any)
       .from('clients')
       .update({
         churn_risk_score: prediction.riskScore,
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
         churn_prediction_date: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .eq('id', clientId);
+      .eq('id', clientId));
 
     // Increment usage
     await incrementUsage(user.organization_id, 'ai_insights', 1);

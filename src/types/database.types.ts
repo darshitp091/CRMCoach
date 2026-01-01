@@ -360,3 +360,18 @@ export interface Database {
     }
   }
 }
+
+// Convenience type exports
+export type Organization = Database['public']['Tables']['organizations']['Row']
+export type User = Database['public']['Tables']['users']['Row']
+export type Client = Database['public']['Tables']['clients']['Row']
+export type Session = Database['public']['Tables']['sessions']['Row']
+export type Payment = Database['public']['Tables']['payments']['Row']
+export type Program = Database['public']['Tables']['programs']['Row']
+
+// Insert types
+export type OrganizationInsert = Database['public']['Tables']['organizations']['Insert']
+export type UserInsert = Database['public']['Tables']['users']['Insert']
+export type ClientInsert = Database['public']['Tables']['clients']['Insert']
+export type SessionInsert = Database['public']['Tables']['sessions']['Insert']
+export type PaymentInsert = Database['public']['Tables']['payments']['Insert']

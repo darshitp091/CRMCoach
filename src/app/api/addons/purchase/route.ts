@@ -4,10 +4,24 @@ import { addOns } from '@/config/pricing';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-});
+let razorpay: Razorpay | null = null;
+
+function getRazorpay(): Razorpay {
+  if (!razorpay) {
+    const keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      throw new Error('Razorpay credentials not configured');
+    }
+
+    razorpay = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
+    });
+  }
+  return razorpay;
+}
 
 /**
  * POST /api/addons/purchase
@@ -42,11 +56,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Get user's organization and plan
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', session.user.id)
-      .single();
+      .single() as any);
 
     if (userError || !user) {
       return NextResponse.json(
@@ -55,11 +69,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { data: org, error: orgError } = await supabase
+    const { data: org, error: orgError } = await (supabase
       .from('organizations')
       .select('subscription_plan')
       .eq('id', user.organization_id)
-      .single();
+      .single() as any);
 
     if (orgError || !org) {
       return NextResponse.json(
@@ -186,7 +200,8 @@ export async function POST(req: NextRequest) {
       },
     };
 
-    const order = await razorpay.orders.create(orderOptions);
+    const rz = getRazorpay();
+    const order = await rz.orders.create(orderOptions);
 
     return NextResponse.json({
       success: true,

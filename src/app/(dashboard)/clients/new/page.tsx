@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -100,10 +100,16 @@ export default function NewClientPage() {
         throw new Error('User not found');
       }
 
-      await ClientService.create({
-        organization_id: user.organization_id,
-        assigned_coach_id: user.id,
-        ...formData,
+      await ClientService.create(user.organization_id, {
+        assignedCoachId: user.id,
+        fullName: formData.full_name,
+        email: formData.email,
+        phone: formData.phone || '',
+        status: formData.status,
+        goals: formData.goals ? [formData.goals] : [],
+        notes: formData.notes || `Program: ${formData.coaching_program || 'Not specified'}
+Address: ${formData.address || ''}, ${formData.city || ''}, ${formData.state || ''}, ${formData.country || ''} ${formData.zip_code || ''}
+Preferred Session Time: ${formData.preferred_session_time || 'Not specified'}`,
       });
 
       toast.success('Client added successfully!');

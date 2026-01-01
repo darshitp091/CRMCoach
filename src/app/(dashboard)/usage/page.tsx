@@ -336,7 +336,7 @@ export default function UsagePage() {
                           <Badge
                             variant={
                               data.status === 'exceeded' || data.status === 'critical'
-                                ? 'destructive'
+                                ? 'danger'
                                 : 'secondary'
                             }
                           >

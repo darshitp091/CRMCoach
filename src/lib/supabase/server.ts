@@ -35,11 +35,11 @@ export async function getUserProfile(userId: string) {
 export async function hasPermission(userId: string, permission: string): Promise<boolean> {
   const supabase = createServerClient();
 
-  const { data } = await supabase
+  const { data } = await (supabase
     .from('users')
     .select('role, permissions')
     .eq('id', userId)
-    .single();
+    .single() as any);
 
   if (!data) return false;
 

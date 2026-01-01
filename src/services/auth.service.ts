@@ -53,8 +53,8 @@ export class AuthService {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // 2. Create organization with 7-day trial
-    const { data: org, error: orgError } = await supabase
-      .from('organizations')
+    const { data: org, error: orgError } = await ((supabase
+      .from('organizations') as any)
       .insert({
         name: data.organizationName,
         slug: data.organizationSlug,
@@ -63,19 +63,19 @@ export class AuthService {
         trial_ends_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       })
       .select()
-      .single();
+      .single());
 
     if (orgError) throw orgError;
     if (!org) throw new Error('Organization creation failed');
 
     // 3. Update user with organization_id and role
-    const { error: updateError } = await supabase
-      .from('users')
+    const { error: updateError } = await ((supabase
+      .from('users') as any)
       .update({
         organization_id: org.id,
         role: data.role || 'owner',
       })
-      .eq('id', authData.user.id);
+      .eq('id', authData.user.id));
 
     if (updateError) throw updateError;
 

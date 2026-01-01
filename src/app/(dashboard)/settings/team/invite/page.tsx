@@ -97,11 +97,11 @@ export default function InviteTeamMemberPage() {
       }
 
       // Get current user's organization
-      const { data: currentUser, error: userError } = await supabase
+      const { data: currentUser, error: userError } = await (supabase
         .from('users')
         .select('organization_id')
         .eq('id', session.user.id)
-        .single();
+        .single() as any);
 
       if (userError || !currentUser) {
         throw new Error('User not found');
@@ -111,8 +111,8 @@ export default function InviteTeamMemberPage() {
       const inviteToken = crypto.randomUUID();
 
       // Create invitation
-      const { error: inviteError } = await supabase
-        .from('team_invitations')
+      const { error: inviteError } = await (supabase
+        .from('team_invitations') as any)
         .insert({
           organization_id: currentUser.organization_id,
           email: email.toLowerCase(),

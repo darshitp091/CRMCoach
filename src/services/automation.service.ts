@@ -27,7 +27,7 @@ export class AutomationService {
    * Create automation
    */
   static async create(organizationId: string, userId: string, data: CreateAutomationData): Promise<AutomationRow> {
-    const automationData: AutomationInsert = {
+    const automationData: any = {
       organization_id: organizationId,
       created_by_id: userId,
       name: data.name,
@@ -39,11 +39,11 @@ export class AutomationService {
       is_active: data.isActive ?? true,
     };
 
-    const { data: automation, error } = await supabase
+    const { data: automation, error } = await (supabase
       .from('automations')
       .insert(automationData)
       .select()
-      .single();
+      .single() as any);
 
     if (error) throw error;
     return automation;
@@ -53,14 +53,14 @@ export class AutomationService {
    * Get automation by ID
    */
   static async getById(automationId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('automations')
       .select(`
         *,
         created_by:users!created_by_id(id, full_name, email)
       `)
       .eq('id', automationId)
-      .single();
+      .single() as any);
 
     if (error) {
       if (error.code === 'PGRST116') return null;
@@ -73,14 +73,14 @@ export class AutomationService {
    * Get all automations for organization
    */
   static async getAll(organizationId: string) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('automations')
       .select(`
         *,
         created_by:users!created_by_id(id, full_name, email)
       `)
       .eq('organization_id', organizationId)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as any);
 
     if (error) throw error;
     return data;
@@ -90,13 +90,13 @@ export class AutomationService {
    * Get automations by trigger type
    */
   static async getByTriggerType(organizationId: string, triggerType: TriggerType) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('automations')
       .select('*')
       .eq('organization_id', organizationId)
       .eq('trigger_type', triggerType)
       .eq('is_active', true)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as any);
 
     if (error) throw error;
     return data;
@@ -116,12 +116,12 @@ export class AutomationService {
     if (data.actions) updateData.actions = data.actions;
     if (data.isActive !== undefined) updateData.is_active = data.isActive;
 
-    const { data: automation, error } = await supabase
-      .from('automations')
+    const { data: automation, error } = await ((supabase
+      .from('automations') as any)
       .update(updateData)
       .eq('id', automationId)
       .select()
-      .single();
+      .single());
 
     if (error) throw error;
     return automation;
@@ -131,10 +131,10 @@ export class AutomationService {
    * Toggle automation active status
    */
   static async toggle(automationId: string, isActive: boolean) {
-    const { error } = await supabase
-      .from('automations')
+    const { error } = await ((supabase
+      .from('automations') as any)
       .update({ is_active: isActive })
-      .eq('id', automationId);
+      .eq('id', automationId));
 
     if (error) throw error;
   }
@@ -155,12 +155,12 @@ export class AutomationService {
    * Get automation logs
    */
   static async getLogs(automationId: string, limit: number = 50) {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('automation_logs')
       .select('*')
       .eq('automation_id', automationId)
       .order('executed_at', { ascending: false })
-      .limit(limit);
+      .limit(limit) as any);
 
     if (error) throw error;
     return data;
@@ -173,20 +173,20 @@ export class AutomationService {
     const automation = await this.getById(automationId);
     if (!automation) throw new Error('Automation not found');
 
-    const { data: logs, error } = await supabase
+    const { data: logs, error } = await (supabase
       .from('automation_logs')
       .select('status')
-      .eq('automation_id', automationId);
+      .eq('automation_id', automationId) as any);
 
     if (error) throw error;
 
     const stats = {
-      total_executions: automation.execution_count,
-      last_executed: automation.last_executed_at,
-      success_count: logs?.filter(l => l.status === 'success').length || 0,
-      failed_count: logs?.filter(l => l.status === 'failed').length || 0,
+      total_executions: (automation as any).execution_count || 0,
+      last_executed: (automation as any).last_executed_at || null,
+      success_count: logs?.filter((l: any) => l.status === 'success').length || 0,
+      failed_count: logs?.filter((l: any) => l.status === 'failed').length || 0,
       success_rate: logs && logs.length > 0
-        ? (logs.filter(l => l.status === 'success').length / logs.length) * 100
+        ? (logs.filter((l: any) => l.status === 'success').length / logs.length) * 100
         : 0,
     };
 
@@ -200,21 +200,21 @@ export class AutomationService {
     const original = await this.getById(automationId);
     if (!original) throw new Error('Automation not found');
 
-    const { data, error } = await supabase
-      .from('automations')
+    const { data, error } = await ((supabase
+      .from('automations') as any)
       .insert({
-        organization_id: original.organization_id,
-        created_by_id: original.created_by_id,
+        organization_id: (original as any).organization_id,
+        created_by_id: (original as any).created_by_id,
         name: newName,
-        description: original.description,
-        trigger_type: original.trigger_type,
-        trigger_config: original.trigger_config,
-        conditions: original.conditions,
-        actions: original.actions,
+        description: (original as any).description,
+        trigger_type: (original as any).trigger_type,
+        trigger_config: (original as any).trigger_config,
+        conditions: (original as any).conditions,
+        actions: (original as any).actions,
         is_active: false, // Start as inactive
       })
       .select()
-      .single();
+      .single());
 
     if (error) throw error;
     return data;

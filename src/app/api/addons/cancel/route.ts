@@ -28,11 +28,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Get user's organization
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await (supabase
       .from('users')
       .select('organization_id')
       .eq('id', session.user.id)
-      .single();
+      .single() as any);
 
     if (userError || !user) {
       return NextResponse.json(
@@ -42,8 +42,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify add-on belongs to user's organization
-    const { data: addon, error: addonError } = await supabase
-      .from('organization_addons')
+    const { data: addon, error: addonError } = await (supabase
+      .from('organization_addons') as any)
       .select('*')
       .eq('id', addonId)
       .eq('organization_id', user.organization_id)
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Cancel add-on using database function
-    const { data: cancelled, error: cancelError } = await supabase.rpc('cancel_addon', {
+    const { data: cancelled, error: cancelError } = await (supabase as any).rpc('cancel_addon', {
       addon_id_param: addonId,
     });
 
