@@ -16,11 +16,12 @@ export const metadata: Metadata = {
   description: 'Manage clients, sessions, payments, and automations in one powerful platform. Built for growing coaching teams with role-based access control.',
   keywords: ['CRM', 'coaching', 'consulting', 'client management', 'automation', 'RBAC', 'team collaboration'],
   authors: [{ name: 'CoachCRM' }],
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
   themeColor: '#6366F1',
 };
 

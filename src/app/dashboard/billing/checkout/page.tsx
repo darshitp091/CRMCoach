@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Check, ArrowLeft, Lock, CreditCard, Shield } from 'lucide-react';
+import { Check, ArrowLeft, Lock, CreditCard, Shield, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { pricingPlans } from '@/config/pricing';
 import { useSubscriptionStatus } from '@/hooks/use-subscription-status';
@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { subscription, loading: subscriptionLoading } = useSubscriptionStatus();
@@ -277,5 +277,17 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-brand-primary-600" />
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }

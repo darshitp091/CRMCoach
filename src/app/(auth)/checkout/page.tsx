@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import { AuthService } from '@/services/auth.service';
 import { RAZORPAY_PLANS, formatAmount, TRIAL_DAYS } from '@/lib/razorpay/config';
 import { Button } from '@/components/ui/button';
-import { Check, Lock, CreditCard, Shield, BarChart3 } from 'lucide-react';
+import { Check, Lock, CreditCard, Shield, BarChart3, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
@@ -16,7 +16,7 @@ declare global {
   }
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -312,5 +312,17 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-brand-primary-50 via-white to-brand-accent-50 flex items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-brand-primary-600" />
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }

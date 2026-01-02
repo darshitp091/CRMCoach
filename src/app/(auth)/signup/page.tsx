@@ -1,16 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { AuthService } from '@/services/auth.service';
 import { toast } from 'sonner';
-import { Eye, EyeOff, UserPlus, BarChart3, CheckCircle2, Users } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, BarChart3, CheckCircle2, Users, Loader2 } from 'lucide-react';
 import { generateSlug } from '@/lib/utils';
 import { pricingPlans } from '@/config/pricing';
 import { RoleSelector } from '@/components/auth/role-selector';
 
-export default function SignupPage() {
+function SignupContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -381,5 +381,17 @@ function BenefitItem({ icon, title, description }: { icon: React.ReactNode; titl
         <p className="text-sm text-brand-primary-100">{description}</p>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-brand-primary-600" />
+      </div>
+    }>
+      <SignupContent />
+    </Suspense>
   );
 }

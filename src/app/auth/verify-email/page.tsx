@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Mail, ArrowRight, CheckCircle2, BarChart3 } from 'lucide-react';
+import { Mail, ArrowRight, CheckCircle2, BarChart3, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get('email') || '';
@@ -128,5 +128,17 @@ export default function VerifyEmailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-brand-primary-50 via-white to-brand-accent-50 flex items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-brand-primary-600" />
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
