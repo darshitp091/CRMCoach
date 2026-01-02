@@ -227,7 +227,7 @@ export default function AddonsPage() {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: orderData.order.amount,
         currency: orderData.order.currency,
-        name: 'CoachCRM Add-ons',
+        name: 'FlowCoach Add-ons',
         description: orderData.addonDetails.description,
         order_id: orderData.order.id,
         handler: async function (response: any) {

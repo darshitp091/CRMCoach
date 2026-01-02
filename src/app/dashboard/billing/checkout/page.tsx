@@ -87,7 +87,7 @@ function CheckoutContent() {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: orderData.order.amount,
         currency: 'INR',
-        name: 'CoachCRM',
+        name: 'FlowCoach',
         description: `${selectedPlan.name} Plan - ${cycle === 'yearly' ? 'Yearly' : 'Monthly'}`,
         order_id: orderData.order.id,
         handler: async function (response: any) {

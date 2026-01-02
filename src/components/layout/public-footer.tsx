@@ -19,20 +19,16 @@ const footerLinks = {
   product: [
     { name: 'Features', href: '/features' },
     { name: 'Pricing', href: '/pricing' },
-    { name: 'Integrations', href: '/integrations' },
-    { name: 'API', href: '/api' },
+    { name: 'Team Roles', href: '/roles' },
   ],
   company: [
     { name: 'About Us', href: '/about' },
-    { name: 'Careers', href: '/careers' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Press', href: '/press' },
+    { name: 'Contact', href: '/contact' },
   ],
   resources: [
-    { name: 'Documentation', href: '/docs' },
+    { name: 'Documentation', href: '/help' },
     { name: 'Help Center', href: '/help' },
     { name: 'Community', href: '/community' },
-    { name: 'Contact', href: '/contact' },
   ],
   legal: [
     { name: 'Privacy Policy', href: '/privacy' },
@@ -77,17 +73,17 @@ export function PublicFooter() {
                       <Sparkles className="h-6 w-6 text-white" />
                     </div>
                   </div>
-                  <span className="text-2xl font-bold">CoachCRM</span>
+                  <span className="text-2xl font-bold">FlowCoach</span>
                 </Link>
                 <p className="mt-4 text-gray-400 text-sm leading-relaxed">
-                  Empowering coaches and consultants with intelligent CRM solutions. Transform your business with automation, insights, and growth.
+                  Where coaching flows naturally. All-in-one platform built for growing teams with intelligent workflows, automation, and powerful insights.
                 </p>
 
                 {/* Contact Info */}
                 <div className="mt-6 space-y-3">
-                  <a href="mailto:hello@coachcrm.com" className="flex items-center gap-2 text-sm text-gray-400 hover:text-brand-primary-400 transition-colors">
+                  <a href="mailto:hello@flowcoach.com" className="flex items-center gap-2 text-sm text-gray-400 hover:text-brand-primary-400 transition-colors">
                     <Mail className="h-4 w-4" />
-                    hello@coachcrm.com
+                    hello@flowcoach.com
                   </a>
                   <a href="tel:+918888888888" className="flex items-center gap-2 text-sm text-gray-400 hover:text-brand-primary-400 transition-colors">
                     <Phone className="h-4 w-4" />
@@ -184,7 +180,7 @@ export function PublicFooter() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-sm text-gray-400">
-                © {new Date().getFullYear()} CoachCRM. All rights reserved. Built with ❤️ in India.
+                © {new Date().getFullYear()} FlowCoach. All rights reserved. Built with ❤️ in India.
               </p>
               <div className="flex items-center gap-6 text-xs text-gray-400">
                 <span>🇮🇳 Made in India</span>

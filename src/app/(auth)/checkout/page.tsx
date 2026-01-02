@@ -83,7 +83,7 @@ function CheckoutContent() {
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         subscription_id: data.subscription.id,
-        name: 'CoachCRM',
+        name: 'FlowCoach',
         description: `${plan.name} Plan - ${TRIAL_DAYS} Day Trial`,
         image: '/logo.png',
         prefill: {
@@ -141,7 +141,7 @@ function CheckoutContent() {
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-primary-500">
               <BarChart3 className="h-7 w-7 text-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">CoachCRM</span>
+            <span className="text-2xl font-bold text-gray-900">FlowCoach</span>
           </Link>
 
           <h1 className="text-4xl font-bold text-gray-900 mb-4">

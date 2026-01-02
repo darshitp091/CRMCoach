@@ -349,7 +349,7 @@ export default function FeaturesPage() {
               Ready to Get Started?
             </h2>
             <p className="text-xl text-white/90 mb-10">
-              Join thousands of coaches using CoachCRM to grow their business.
+              Join thousands of coaches using FlowCoach to grow their business.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/signup">

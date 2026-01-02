@@ -31,7 +31,7 @@ export function TrialExpirationBanner() {
               Your Trial Has Ended
             </h2>
             <p className="text-gray-600 mb-6">
-              Your 7-day free trial has expired. Upgrade to a paid plan to continue using CoachCRM and access all your data.
+              Your 7-day free trial has expired. Upgrade to a paid plan to continue using FlowCoach and access all your data.
             </p>
             <Button
               onClick={() => router.push('/dashboard/billing')}
@@ -67,7 +67,7 @@ export function TrialExpirationBanner() {
                 {daysUntilTrialExpires === 0 ? (
                   <>Your trial ends <span className="font-bold text-yellow-600">today</span>. Upgrade now to keep your data.</>
                 ) : daysUntilTrialExpires === 1 ? (
-                  <>Your trial ends in <span className="font-bold text-yellow-600">1 day</span>. Upgrade to continue using CoachCRM.</>
+                  <>Your trial ends in <span className="font-bold text-yellow-600">1 day</span>. Upgrade to continue using FlowCoach.</>
                 ) : (
                   <>Your trial ends in <span className="font-bold text-yellow-600">{daysUntilTrialExpires} days</span>. Upgrade to unlock full access.</>
                 )}

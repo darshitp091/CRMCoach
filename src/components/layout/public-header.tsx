@@ -55,7 +55,7 @@ export function PublicHeader() {
               </div>
             </motion.div>
             <span className="text-2xl font-bold bg-gradient-to-r from-brand-primary-600 via-brand-accent-600 to-brand-secondary-600 bg-clip-text text-transparent">
-              CoachCRM
+              FlowCoach
             </span>
           </Link>
 

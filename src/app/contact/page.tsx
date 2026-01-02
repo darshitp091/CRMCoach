@@ -162,8 +162,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg mb-1">Email Us</h3>
-                      <a href="mailto:hello@coachcrm.com" className="text-brand-primary-600 hover:text-brand-accent-600 transition-colors">
-                        hello@coachcrm.com
+                      <a href="mailto:hello@flowcoach.com" className="text-brand-primary-600 hover:text-brand-accent-600 transition-colors">
+                        hello@flowcoach.com
                       </a>
                       <p className="text-sm text-gray-600 mt-1">We'll respond within 24 hours</p>
                     </div>

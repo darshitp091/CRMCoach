@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
+import { CookieConsentBanner } from '@/components/cookies/cookie-consent-banner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -12,10 +13,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'CoachCRM - Complete CRM for Coaching & Consulting Businesses',
-  description: 'Manage clients, sessions, payments, and automations in one powerful platform. Built for growing coaching teams with role-based access control.',
-  keywords: ['CRM', 'coaching', 'consulting', 'client management', 'automation', 'RBAC', 'team collaboration'],
-  authors: [{ name: 'CoachCRM' }],
+  title: 'FlowCoach - Where Coaching Flows Naturally',
+  description: 'All-in-one coaching platform built for growing teams. Manage clients, sessions, payments, and automations seamlessly with intelligent workflows and powerful RBAC.',
+  keywords: ['coaching platform', 'coaching CRM', 'client management', 'session tracking', 'automation', 'RBAC', 'team collaboration', 'coaching software'],
+  authors: [{ name: 'FlowCoach' }],
 };
 
 export const viewport = {
@@ -38,6 +39,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} antialiased`}>
         {children}
+        <CookieConsentBanner />
         <Toaster
           position="top-right"
           richColors

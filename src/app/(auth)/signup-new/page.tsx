@@ -81,7 +81,7 @@ export default function SignupNewPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-primary-500">
                 <BarChart3 className="h-7 w-7 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gray-900">CoachCRM</span>
+              <span className="text-2xl font-bold text-gray-900">FlowCoach</span>
             </Link>
 
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -175,7 +175,7 @@ export default function SignupNewPage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-primary-500">
               <BarChart3 className="h-7 w-7 text-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">CoachCRM</span>
+            <span className="text-2xl font-bold text-gray-900">FlowCoach</span>
           </Link>
 
           <h1 className="text-3xl font-bold text-gray-900 mb-2">

@@ -84,7 +84,7 @@ function SignupContent() {
         // Redirect to a confirmation page
         router.push('/auth/verify-email?email=' + encodeURIComponent(formData.email));
       } else {
-        toast.success('Account created! Welcome to CoachCRM');
+        toast.success('Account created! Welcome to FlowCoach');
         router.push('/dashboard');
       }
     } catch (error: any) {
@@ -104,7 +104,7 @@ function SignupContent() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary-500">
                 <BarChart3 className="h-6 w-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gray-900">CoachCRM</span>
+              <span className="text-2xl font-bold text-gray-900">FlowCoach</span>
             </Link>
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-xs font-medium text-blue-700">
               <Users className="h-3 w-3" />

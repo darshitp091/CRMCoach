@@ -133,7 +133,7 @@ const testimonials = [
     name: 'Priya Sharma',
     role: 'Life Coach, Mumbai',
     image: '👩‍💼',
-    content: 'CoachCRM transformed my business. I save 15 hours every week on admin work!',
+    content: 'FlowCoach transformed my business. I save 15 hours every week on admin work!',
     rating: 5,
   },
   {
@@ -421,7 +421,7 @@ export default function HomePage() {
             <h2 className="text-5xl md:text-6xl font-bold mb-6">
               Loved by <span className="bg-gradient-to-r from-brand-primary-600 to-brand-accent-600 bg-clip-text text-transparent">50,000+ Coaches</span>
             </h2>
-            <p className="text-xl text-gray-600">See what coaches across India are saying about CoachCRM</p>
+            <p className="text-xl text-gray-600">See what coaches across India are saying about FlowCoach</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -454,7 +454,7 @@ export default function HomePage() {
             Ready to Transform Your Coaching Business?
           </h2>
           <p className="text-xl text-white/90 mb-12">
-            Join 50,000+ coaches who have already made the switch to CoachCRM.
+            Join 50,000+ coaches who have already made the switch to FlowCoach.
           </p>
           <Link href="/signup">
             <Button size="lg" className="bg-white text-brand-primary-600 hover:bg-gray-100 px-12 py-8 text-lg shadow-2xl hover-scale">

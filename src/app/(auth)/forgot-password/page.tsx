@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-primary-500">
                 <BarChart3 className="h-7 w-7 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gray-900">CoachCRM</span>
+              <span className="text-2xl font-bold text-gray-900">FlowCoach</span>
             </Link>
           </div>
 
@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-primary-500">
               <BarChart3 className="h-7 w-7 text-white" />
             </div>
-            <span className="text-2xl font-bold text-gray-900">CoachCRM</span>
+            <span className="text-2xl font-bold text-gray-900">FlowCoach</span>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             Reset your password

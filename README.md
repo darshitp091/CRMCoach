@@ -1,4 +1,4 @@
-# 🚀 CoachCRM - Complete SaaS Platform for Coaching Businesses
+# 🚀 FlowCoach - Complete SaaS Platform for Coaching Businesses
 
 A production-ready, multi-tenant CRM platform built specifically for coaching and consulting businesses. Fully integrated with Razorpay payments, advanced RBAC system, and comprehensive automation workflows.
 
@@ -377,7 +377,7 @@ MIT License - see LICENSE file
 - Music Teachers
 - Any 1-on-1 service business
 
-## 🌟 Why CoachCRM?
+## 🌟 Why FlowCoach?
 
 - **Niche-Specific** - Built for coaching businesses
 - **All-in-One** - No need for multiple tools

@@ -83,12 +83,12 @@ export default function AboutPage() {
           <h2 className="text-4xl font-bold text-center mb-12">Our Story</h2>
           <div className="prose prose-lg mx-auto text-gray-600">
             <p>
-              CoachCRM was born from a simple observation: coaches and consultants were spending
+              FlowCoach was born from a simple observation: coaches and consultants were spending
               more time on admin work than coaching. We saw talented professionals struggle with
               spreadsheets, multiple tools, and manual processes.
             </p>
             <p>
-              In 2020, we set out to change that. We built CoachCRM specifically for the Indian
+              In 2020, we set out to change that. We built FlowCoach specifically for the Indian
               coaching market, with features like Razorpay integration, WhatsApp messaging, and
               affordable pricing designed for Indian businesses.
             </p>

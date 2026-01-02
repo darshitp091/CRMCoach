@@ -144,7 +144,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-primary-500">
                 <BarChart3 className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">CoachCRM</span>
+              <span className="text-xl font-bold text-gray-900">FlowCoach</span>
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}

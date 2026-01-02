@@ -23,7 +23,7 @@ import { supabase } from '@/lib/supabase/client';
 const faqs = [
   {
     question: 'How does the 7-day trial work?',
-    answer: 'Sign up and get full access to all features for 7 days. No credit card required. After the trial, choose a plan to continue using CoachCRM.',
+    answer: 'Sign up and get full access to all features for 7 days. No credit card required. After the trial, choose a plan to continue using FlowCoach.',
   },
   {
     question: 'Can I upgrade or downgrade anytime?',

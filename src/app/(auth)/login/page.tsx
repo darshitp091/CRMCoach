@@ -50,7 +50,7 @@ export default function LoginPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary-500">
                 <BarChart3 className="h-6 w-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-gray-900">CoachCRM</span>
+              <span className="text-2xl font-bold text-gray-900">FlowCoach</span>
             </Link>
             <h2 className="mt-8 text-3xl font-bold tracking-tight text-gray-900">
               Welcome back
@@ -199,7 +199,7 @@ export default function LoginPage() {
 
               {/* Role Badges Showcase */}
               <div className="mt-10 space-y-3">
-                <p className="text-sm font-medium text-brand-primary-100">Who's using CoachCRM?</p>
+                <p className="text-sm font-medium text-brand-primary-100">Who's using FlowCoach?</p>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-3">
                     <div className="flex items-center gap-2 mb-1">
