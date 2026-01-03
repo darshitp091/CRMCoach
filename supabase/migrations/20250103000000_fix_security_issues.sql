@@ -904,8 +904,11 @@ BEGIN
 END $$;
 
 -- Success message
-RAISE NOTICE 'Database security fixes applied successfully!';
-RAISE NOTICE '✓ RLS enabled on audit_logs and migrations';
-RAISE NOTICE '✓ SECURITY DEFINER removed from team_members_view';
-RAISE NOTICE '✓ search_path fixed for all 39 functions';
-RAISE NOTICE '✓ All Supabase linter errors and warnings resolved';
+DO $$
+BEGIN
+  RAISE NOTICE 'Database security fixes applied successfully!';
+  RAISE NOTICE '✓ RLS enabled on audit_logs and migrations';
+  RAISE NOTICE '✓ SECURITY DEFINER removed from team_members_view';
+  RAISE NOTICE '✓ search_path fixed for all 39 functions';
+  RAISE NOTICE '✓ All Supabase linter errors and warnings resolved';
+END $$;
