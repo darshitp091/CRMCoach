@@ -71,45 +71,9 @@ GRANT SELECT ON public.team_members_view TO authenticated;
 -- Add SECURITY DEFINER and search_path to all 39 functions
 -- ============================================================================
 
--- Drop all functions first to avoid conflicts
-DROP FUNCTION IF EXISTS public.get_user_organization_id();
-DROP FUNCTION IF EXISTS public.is_admin();
-DROP FUNCTION IF EXISTS public.update_client_session_stats();
-DROP FUNCTION IF EXISTS public.update_client_financial_stats();
-DROP FUNCTION IF EXISTS public.generate_invoice_number();
-DROP FUNCTION IF EXISTS public.calculate_session_end_time(timestamp with time zone, integer);
-DROP FUNCTION IF EXISTS public.trigger_automation_on_client_created();
-DROP FUNCTION IF EXISTS public.trigger_automation_on_session_scheduled();
-DROP FUNCTION IF EXISTS public.trigger_automation_on_session_completed();
-DROP FUNCTION IF EXISTS public.trigger_automation_on_payment_received();
-DROP FUNCTION IF EXISTS public.trigger_automation_on_payment_failed();
-DROP FUNCTION IF EXISTS public.get_dashboard_analytics(uuid);
-DROP FUNCTION IF EXISTS public.search_clients(text);
-DROP FUNCTION IF EXISTS public.get_upcoming_sessions(integer);
-DROP FUNCTION IF EXISTS public.handle_new_user();
-DROP FUNCTION IF EXISTS public.get_current_usage_record(uuid);
-DROP FUNCTION IF EXISTS public.increment_usage(uuid, text, integer);
-DROP FUNCTION IF EXISTS public.track_cost(uuid, text, numeric);
-DROP FUNCTION IF EXISTS public.check_usage_limit(uuid, text);
-DROP FUNCTION IF EXISTS public.update_usage_from_actuals();
-DROP FUNCTION IF EXISTS public.trigger_update_client_count();
-DROP FUNCTION IF EXISTS public.get_active_addons(uuid);
-DROP FUNCTION IF EXISTS public.purchase_addon(uuid, text, text);
-DROP FUNCTION IF EXISTS public.cancel_addon(uuid);
-DROP FUNCTION IF EXISTS public.increment_addon_usage(uuid, integer);
-DROP FUNCTION IF EXISTS public.get_addon_usage_summary(uuid);
-DROP FUNCTION IF EXISTS public.reset_addon_monthly_usage();
-DROP FUNCTION IF EXISTS public.process_overage_charges();
-DROP FUNCTION IF EXISTS public.get_whatsapp_conversation(uuid, text);
-DROP FUNCTION IF EXISTS public.get_high_churn_risk_clients(uuid);
-DROP FUNCTION IF EXISTS public.increment_template_usage(uuid);
-DROP FUNCTION IF EXISTS public.get_user_role();
-DROP FUNCTION IF EXISTS public.has_permission(text);
-DROP FUNCTION IF EXISTS public.get_assigned_clients(uuid);
-DROP FUNCTION IF EXISTS public.audit_role_change();
-DROP FUNCTION IF EXISTS public.assign_client_to_coach(uuid, uuid);
-DROP FUNCTION IF EXISTS public.log_audit(text, text, uuid, json, json);
-DROP FUNCTION IF EXISTS public.update_updated_at_column();
+-- Note: We don't drop functions that have RLS policy dependencies
+-- Instead, we use CREATE OR REPLACE which will update the function in place
+-- This preserves the existing RLS policies that depend on these functions
 
 -- Function 1: get_user_organization_id
 CREATE OR REPLACE FUNCTION public.get_user_organization_id()
