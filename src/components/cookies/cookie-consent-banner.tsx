@@ -87,11 +87,11 @@ export function CookieConsentBanner() {
 
           {/* Cookie Banner */}
           <motion.div
-            initial={{ y: 100, opacity: 0 }}
+            initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
+            exit={{ y: -100, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-[9999] p-4 md:p-6"
+            className="fixed top-0 left-0 right-0 z-[9999] p-4 md:p-6"
             style={{ position: 'fixed' }}
           >
             <div className="mx-auto max-w-6xl">
