@@ -92,8 +92,8 @@ const nextConfig = {
   },
 
   env: {
-    NEXT_PUBLIC_APP_NAME: 'Coaching CRM',
-    NEXT_PUBLIC_APP_DESCRIPTION: 'Complete CRM for Coaching & Consulting Businesses',
+    NEXT_PUBLIC_APP_NAME: 'FlowCoach',
+    NEXT_PUBLIC_APP_DESCRIPTION: 'Complete CRM Platform for Coaching Professionals',
   },
 
   experimental: {
