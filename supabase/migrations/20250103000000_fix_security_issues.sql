@@ -58,7 +58,7 @@ SELECT
   u.organization_id,
   u.role,
   u.created_at,
-  u.last_seen_at,
+  u.last_login_at,
   o.name AS organization_name
 FROM public.users u
 INNER JOIN public.organizations o ON u.organization_id = o.id;
