@@ -46,28 +46,24 @@ ALTER TABLE public.migrations ENABLE ROW LEVEL SECURITY;
 -- Remove SECURITY DEFINER from team_members_view
 -- ============================================================================
 
--- Recreate the view WITHOUT security_definer property
--- Using CREATE OR REPLACE to override any existing SECURITY DEFINER setting
-CREATE OR REPLACE VIEW public.team_members_view
-WITH (security_invoker=true)
-AS
+-- Drop and recreate the view without SECURITY DEFINER
+DROP VIEW IF EXISTS public.team_members_view;
+
+CREATE VIEW public.team_members_view AS
 SELECT
   u.id,
   u.email,
   u.full_name,
-  u.role,
-  u.is_supervisor,
-  u.is_biller,
+  u.avatar_url,
   u.organization_id,
-  u.role_assigned_at,
+  u.role,
   u.created_at,
-  COUNT(DISTINCT cca.client_id) as assigned_clients_count
+  u.last_login_at,
+  o.name AS organization_name
 FROM public.users u
-LEFT JOIN public.coach_client_assignments cca ON u.id = cca.coach_id
-GROUP BY u.id, u.email, u.full_name, u.role, u.is_supervisor, u.is_biller,
-         u.organization_id, u.role_assigned_at, u.created_at;
+INNER JOIN public.organizations o ON u.organization_id = o.id;
 
--- Ensure proper permissions
+-- Grant access to authenticated users
 GRANT SELECT ON public.team_members_view TO authenticated;
 
 -- ============================================================================
